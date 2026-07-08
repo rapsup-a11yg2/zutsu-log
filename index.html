@@ -6,22 +6,25 @@
 <title>ずつログ</title>
 <style>
   :root{
-    --bg:#1d1b26;
-    --surface:#27242f;
-    --surface2:#312d3c;
-    --line:#3d3849;
-    --text:#e9e5f0;
-    --sub:#a49dbb;
-    --accent:#a99fe0;
-    --nsaid:#7fb0d9;
-    --triptan:#e0a06a;
-    --pain0:#5f6b78;
-    --pain1:#8fbf9f;
-    --pain2:#e0b45f;
-    --pain3:#d97a7a;
-    --danger:#d97a7a;
-    --sat:#8fb8e8;
-    --sun:#e89a9a;
+    --bg:#f4f7f6;
+    --surface:#ffffff;
+    --surface2:#eef3f1;
+    --line:#dbe4e1;
+    --text:#33414b;
+    --sub:#7d8b94;
+    --accent:#3aa79e;
+    --accent-soft:#e2f2f0;
+    --nsaid:#4e97c9;
+    --triptan:#e8935a;
+    --other:#9aa7ae;
+    --p0:#b9c4cc;
+    --p1:#5fa8dc;
+    --p2:#f0b83e;
+    --p3:#e4726b;
+    --p4:#9b6fc9;
+    --danger:#d9645c;
+    --sat:#5fa8dc;
+    --sun:#d9645c;
     --radius:16px;
   }
   *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
@@ -35,14 +38,24 @@
     max-width:520px;
     margin:0 auto;
   }
-  h1{font-size:20px;font-weight:700;letter-spacing:.04em;display:flex;align-items:baseline;gap:8px}
+  h1{font-size:20px;font-weight:700;letter-spacing:.04em;display:flex;align-items:baseline;gap:8px;color:var(--accent)}
   h1 small{font-size:12px;color:var(--sub);font-weight:400}
   h2{font-size:13px;color:var(--sub);font-weight:600;letter-spacing:.08em;margin:26px 0 10px}
-  .card{background:var(--surface);border-radius:var(--radius);padding:14px}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:14px}
 
-  /* ---- 前回の服薬(現在時刻基準) ---- */
+  /* ---- バックアップ促し ---- */
+  .bkbanner{
+    display:flex;align-items:center;gap:10px;margin-top:12px;
+    background:#fdf3dd;border:1px solid #f0d9a3;border-radius:12px;padding:10px 12px;
+  }
+  .bkbanner .bktext{flex:1;font-size:13px;color:#8a6a1f}
+  .bkbanner button{border:none;cursor:pointer;font-family:inherit;border-radius:999px}
+  .bkbanner .bknow{background:#f0b83e;color:#5c430e;font-size:13px;font-weight:700;padding:7px 14px}
+  .bkbanner .bkclose{background:none;color:#b39244;font-size:16px;padding:4px 6px}
+
+  /* ---- 前回の服薬 ---- */
   .since-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
-  .since{border-radius:var(--radius);padding:12px 14px;background:var(--surface)}
+  .since{border-radius:var(--radius);padding:12px 14px;background:var(--surface);border:1px solid var(--line)}
   .since .tag{font-size:12px;font-weight:700;letter-spacing:.05em}
   .since.nsaid .tag{color:var(--nsaid)}
   .since.triptan .tag{color:var(--triptan)}
@@ -60,30 +73,32 @@
   .pk-rel .rn{color:var(--nsaid)}
   .pk-rel .rt{color:var(--triptan)}
   .pk-now{
-    background:var(--surface2);border:1px solid var(--line);color:var(--accent);
+    background:var(--accent-soft);border:1px solid var(--accent);color:var(--accent);
     border-radius:999px;padding:8px 16px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;flex:0 0 auto;
   }
   .pk-scrollwrap{position:relative}
   .pk-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;display:flex;scrollbar-width:none}
   .pk-scroll::-webkit-scrollbar{display:none}
   .pk-spacer{flex:0 0 auto}
-  .pk-track{position:relative;height:128px;flex:0 0 auto}
+  .pk-track{position:relative;height:142px;flex:0 0 auto}
   .pk-dayline{position:absolute;top:0;bottom:0;width:1px;background:var(--line)}
   .pk-date{position:absolute;top:2px;font-size:11px;font-weight:700;color:var(--text);white-space:nowrap;padding-left:5px}
   .pk-date.sat{color:var(--sat)} .pk-date.sun{color:var(--sun)}
   .pk-hour{position:absolute;top:22px;font-size:10px;color:var(--sub);transform:translateX(-50%);font-variant-numeric:tabular-nums}
   .pk-tick{position:absolute;top:36px;width:1px;height:5px;background:var(--line)}
-  .pk-night{position:absolute;top:44px;bottom:0;background:rgba(0,0,0,.16)}
+  .pk-night{position:absolute;top:44px;bottom:0;background:rgba(90,120,140,.07)}
   .pk-mark{position:absolute;transform:translateX(-50%);border-radius:50%}
-  .pk-mark.p1{width:11px;height:11px;background:var(--pain1);top:58px}
-  .pk-mark.p2{width:15px;height:15px;background:var(--pain2);top:56px}
-  .pk-mark.p3{width:19px;height:19px;background:var(--pain3);top:54px}
+  .pk-mark.p1{width:10px;height:10px;background:var(--p1);top:58px}
+  .pk-mark.p2{width:13px;height:13px;background:var(--p2);top:56px}
+  .pk-mark.p3{width:16px;height:16px;background:var(--p3);top:55px}
+  .pk-mark.p4{width:19px;height:19px;background:var(--p4);top:53px}
   .pk-med{
     position:absolute;transform:translateX(-50%);width:15px;height:15px;border-radius:4px;
-    font-size:9px;line-height:15px;text-align:center;color:#1d1b26;font-weight:700;
+    font-size:9px;line-height:15px;text-align:center;color:#fff;font-weight:700;
   }
-  .pk-med.n{background:var(--nsaid);top:82px}
-  .pk-med.t{background:var(--triptan);top:101px}
+  .pk-med.n{background:var(--nsaid);top:80px}
+  .pk-med.t{background:var(--triptan);top:98px}
+  .pk-med.o{background:var(--other);top:116px}
   .pk-cursor{position:absolute;left:50%;top:44px;bottom:0;width:2px;margin-left:-1px;background:var(--accent);pointer-events:none;border-radius:2px}
   .pk-cursor::before{
     content:"";position:absolute;top:-8px;left:50%;transform:translateX(-50%);
@@ -93,70 +108,126 @@
 
   /* ---- 記録フォーム ---- */
   label.small{display:block;font-size:12px;color:var(--sub);margin-bottom:6px}
-  .faces{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:4px}
+  .faces{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:4px}
   .face{
-    background:var(--surface2);border:2px solid var(--line);border-radius:14px;
-    padding:10px 4px 8px;text-align:center;cursor:pointer;user-select:none;
+    background:var(--surface);border:2px solid var(--line);border-radius:14px;
+    padding:9px 2px 7px;text-align:center;cursor:pointer;user-select:none;
   }
-  .face .icon{font-size:26px;line-height:1;display:block;filter:grayscale(1);opacity:.55}
-  .face .lbl{font-size:11px;color:var(--sub);margin-top:5px;display:block}
-  .face.sel{background:var(--surface)}
+  .face .icon{font-size:24px;line-height:1;display:block;filter:grayscale(1);opacity:.45}
+  .face .lbl{font-size:10px;color:var(--sub);margin-top:5px;display:block}
   .face.sel .icon{filter:none;opacity:1}
-  .face.sel[data-p="0"]{border-color:var(--pain0)}
-  .face.sel[data-p="1"]{border-color:var(--pain1)}
-  .face.sel[data-p="2"]{border-color:var(--pain2)}
-  .face.sel[data-p="3"]{border-color:var(--pain3)}
-  .face.sel .lbl{color:var(--text)}
+  .face.sel .lbl{color:var(--text);font-weight:700}
+  .face.sel[data-p="0"]{border-color:var(--p0);background:#f2f5f7}
+  .face.sel[data-p="1"]{border-color:var(--p1);background:#eaf3fb}
+  .face.sel[data-p="2"]{border-color:var(--p2);background:#fdf5e2}
+  .face.sel[data-p="3"]{border-color:var(--p3);background:#fceceb}
+  .face.sel[data-p="4"]{border-color:var(--p4);background:#f3ecfa}
+
+  .nauseas{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:4px}
+  .nausea{
+    background:var(--surface);border:2px solid var(--line);border-radius:12px;
+    padding:10px 4px;text-align:center;cursor:pointer;user-select:none;font-size:13px;color:var(--sub);font-family:inherit;
+  }
+  .nausea.sel{color:var(--text);font-weight:700}
+  .nausea.sel[data-n="0"]{border-color:var(--p0);background:#f2f5f7}
+  .nausea.sel[data-n="1"]{border-color:var(--p2);background:#fdf5e2}
+  .nausea.sel[data-n="2"]{border-color:var(--p3);background:#fceceb}
 
   .meds{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
   .med{
-    border:2px solid var(--line);background:var(--surface2);color:var(--text);
+    border:2px solid var(--line);background:var(--surface);color:var(--text);
     border-radius:999px;padding:9px 14px;font-size:14px;cursor:pointer;user-select:none;font-family:inherit;
   }
-  .med.nsaid.sel{border-color:var(--nsaid);background:rgba(127,176,217,.16)}
-  .med.triptan.sel{border-color:var(--triptan);background:rgba(224,160,106,.16)}
+  .med.nsaid.sel{border-color:var(--nsaid);background:#eaf3fb}
+  .med.triptan.sel{border-color:var(--triptan);background:#fdf1e7}
+  .med.other.sel{border-color:var(--other);background:#f0f3f4}
   .med-group-lbl{width:100%;font-size:11px;color:var(--sub);margin-top:6px}
   .med-group-lbl:first-child{margin-top:0}
+  .otherinput{
+    width:100%;background:var(--surface);border:1px solid var(--line);color:var(--text);
+    border-radius:10px;padding:10px;font-size:16px;font-family:inherit;margin-top:8px;
+  }
 
   textarea{
-    width:100%;background:var(--surface2);border:1px solid var(--line);color:var(--text);
+    width:100%;background:var(--surface);border:1px solid var(--line);color:var(--text);
     border-radius:10px;padding:10px;font-size:16px;font-family:inherit;min-height:64px;resize:vertical;
   }
   .savebtn{
-    width:100%;margin-top:14px;background:var(--accent);color:#1d1b26;border:none;
+    width:100%;margin-top:14px;background:var(--accent);color:#fff;border:none;
     border-radius:14px;padding:15px;font-size:17px;font-weight:700;cursor:pointer;font-family:inherit;
   }
   .savebtn:active{opacity:.85}
-  .field{margin-top:14px}
+  .field{margin-top:16px}
 
   /* ---- 日ごとタイムライン ---- */
-  .tl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;background:var(--surface);border-radius:var(--radius);padding:12px 10px 8px}
-  .tl{display:flex;align-items:flex-end;gap:3px;min-height:120px}
-  .day{width:18px;flex:0 0 18px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:120px}
-  .bar{width:12px;border-radius:4px 4px 2px 2px;background:var(--line)}
-  .dots{display:flex;flex-direction:column;gap:2px;margin-top:3px;min-height:22px;justify-content:flex-start}
-  .dot{width:10px;height:10px;border-radius:3px;font-size:7px;line-height:10px;text-align:center;color:#1d1b26;font-weight:700}
+  .tl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:12px 10px 8px}
+  .tl{display:flex;align-items:flex-end;gap:3px;min-height:130px}
+  .day{width:18px;flex:0 0 18px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:130px}
+  .bar{width:12px;border-radius:4px 4px 2px 2px;background:var(--surface2)}
+  .dots{display:flex;flex-direction:column;gap:2px;margin-top:3px;min-height:34px;justify-content:flex-start}
+  .dot{width:10px;height:10px;border-radius:3px;font-size:7px;line-height:10px;text-align:center;color:#fff;font-weight:700}
   .dot.n{background:var(--nsaid)}
   .dot.t{background:var(--triptan)}
+  .dot.o{background:var(--other)}
   .dlbl{font-size:9px;color:var(--sub);margin-top:4px;writing-mode:vertical-rl;height:26px}
   .day.today .dlbl{color:var(--accent);font-weight:700}
-  .tl-legend{display:flex;gap:14px;font-size:11px;color:var(--sub);margin-top:8px;flex-wrap:wrap}
+  .tl-legend{display:flex;gap:12px;font-size:11px;color:var(--sub);margin-top:8px;flex-wrap:wrap}
   .tl-legend span::before{content:"";display:inline-block;width:9px;height:9px;border-radius:3px;margin-right:4px;vertical-align:-1px}
-  .tl-legend .l-p1::before{background:var(--pain1)}
-  .tl-legend .l-p2::before{background:var(--pain2)}
-  .tl-legend .l-p3::before{background:var(--pain3)}
+  .tl-legend .l-p1::before{background:var(--p1)}
+  .tl-legend .l-p2::before{background:var(--p2)}
+  .tl-legend .l-p3::before{background:var(--p3)}
+  .tl-legend .l-p4::before{background:var(--p4)}
   .tl-legend .l-n::before{background:var(--nsaid)}
   .tl-legend .l-t::before{background:var(--triptan)}
+  .tl-legend .l-o::before{background:var(--other)}
 
-  /* ---- 今月 ---- */
+  /* ---- 直近30日 ---- */
   .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-  .stat{background:var(--surface);border-radius:var(--radius);padding:12px;text-align:center}
+  .stat{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:12px;text-align:center}
   .stat .num{font-size:26px;font-weight:700;font-variant-numeric:tabular-nums}
   .stat .lbl{font-size:11px;color:var(--sub);margin-top:2px}
   .stat.warn .num{color:var(--danger)}
   .stat .thresh{font-size:10px;color:var(--sub);margin-top:2px}
   .warnmsg{font-size:12px;color:var(--danger);margin-top:8px;display:none}
   .warnmsg.show{display:block}
+
+  /* ---- ふりかえり ---- */
+  .rv-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+  .rv-nav button{
+    background:var(--surface2);border:1px solid var(--line);color:var(--text);
+    border-radius:10px;width:38px;height:38px;font-size:18px;cursor:pointer;font-family:inherit;
+  }
+  .rv-nav button:disabled{opacity:.3}
+  .rv-title{font-size:16px;font-weight:700}
+  .cal-head{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-bottom:3px}
+  .cal-head div{text-align:center;font-size:11px;color:var(--sub);font-weight:700}
+  .cal-head div:first-child{color:var(--sun)}
+  .cal-head div:last-child{color:var(--sat)}
+  .cal{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+  .cell{
+    min-height:46px;border-radius:8px;border:1px solid var(--line);background:var(--surface);
+    padding:3px 4px;position:relative;
+  }
+  .cell.blank{border:none;background:none}
+  .cell .dn{font-size:11px;color:var(--sub);font-variant-numeric:tabular-nums}
+  .cell.haspain .dn{color:var(--text);font-weight:700}
+  .cell.today{outline:2px solid var(--accent);outline-offset:-1px}
+  .cell .cmark{display:flex;gap:2px;position:absolute;left:4px;bottom:4px}
+  .cell .cm{width:6px;height:6px;border-radius:2px}
+  .cell .cm.n{background:var(--nsaid)}
+  .cell .cm.t{background:var(--triptan)}
+  .cell .cm.o{background:var(--other)}
+  .rv-sum{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:14px}
+  .rv-sum .s{background:var(--surface2);border-radius:10px;padding:8px 4px;text-align:center}
+  .rv-sum .s .n{font-size:18px;font-weight:700;font-variant-numeric:tabular-nums}
+  .rv-sum .s .l{font-size:10px;color:var(--sub);margin-top:1px}
+  .rv-sub{font-size:12px;color:var(--sub);font-weight:700;margin:16px 0 8px}
+  .brow{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+  .brow .bl{flex:0 0 52px;font-size:12px;color:var(--sub);text-align:right}
+  .brow .btrack{flex:1;height:16px;border-radius:6px;background:var(--surface2);overflow:hidden}
+  .brow .bfill{height:100%;border-radius:6px;min-width:2px}
+  .brow .bn{flex:0 0 28px;font-size:12px;font-variant-numeric:tabular-nums;text-align:right}
+  .brow.dim .bfill{opacity:.25}
 
   /* ---- 履歴 ---- */
   .rec{display:flex;align-items:flex-start;gap:10px;padding:11px 2px;border-bottom:1px solid var(--line)}
@@ -179,8 +250,9 @@
 
   .toast{
     position:fixed;left:50%;bottom:calc(28px + env(safe-area-inset-bottom));transform:translateX(-50%) translateY(20px);
-    background:var(--accent);color:#1d1b26;font-weight:700;font-size:14px;
+    background:var(--accent);color:#fff;font-weight:700;font-size:14px;
     padding:11px 20px;border-radius:999px;opacity:0;pointer-events:none;transition:all .25s;white-space:nowrap;z-index:10;
+    box-shadow:0 4px 14px rgba(51,65,75,.18);
   }
   .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
   .empty{color:var(--sub);font-size:14px;text-align:center;padding:14px 0}
@@ -190,6 +262,12 @@
 <body>
 
 <h1>ずつログ <small>片頭痛の記録</small></h1>
+
+<div class="bkbanner" id="bkBanner" style="display:none">
+  <div class="bktext" id="bkText"></div>
+  <button class="bknow" id="bkNow">今すぐ</button>
+  <button class="bkclose" id="bkClose">✕</button>
+</div>
 
 <h2>前回の服薬から(現在)</h2>
 <div class="since-grid">
@@ -229,9 +307,19 @@
     <label class="small">痛みは?</label>
     <div class="faces" id="faces">
       <div class="face sel" data-p="0"><span class="icon">🙂</span><span class="lbl">なし</span></div>
-      <div class="face" data-p="1"><span class="icon">😕</span><span class="lbl">軽い</span></div>
-      <div class="face" data-p="2"><span class="icon">😣</span><span class="lbl">中くらい</span></div>
-      <div class="face" data-p="3"><span class="icon">😖</span><span class="lbl">激しい</span></div>
+      <div class="face" data-p="1"><span class="icon">😐</span><span class="lbl">軽い</span></div>
+      <div class="face" data-p="2"><span class="icon">😕</span><span class="lbl">中くらい</span></div>
+      <div class="face" data-p="3"><span class="icon">😣</span><span class="lbl">激しい</span></div>
+      <div class="face" data-p="4"><span class="icon">😵</span><span class="lbl">最悪</span></div>
+    </div>
+  </div>
+
+  <div class="field">
+    <label class="small">吐き気は?</label>
+    <div class="nauseas" id="nauseas">
+      <button type="button" class="nausea sel" data-n="0">なし</button>
+      <button type="button" class="nausea" data-n="1">吐き気あり</button>
+      <button type="button" class="nausea" data-n="2">吐いた</button>
     </div>
   </div>
 
@@ -246,7 +334,10 @@
       <button type="button" class="med triptan" data-med="ゾルミトリプタン">ゾルミトリプタン(ゾーミッグ)</button>
       <button type="button" class="med triptan" data-med="エレトリプタン">エレトリプタン(レルパックス)</button>
       <button type="button" class="med triptan" data-med="リザトリプタン">リザトリプタン(マクサルト)</button>
+      <div class="med-group-lbl">その他</div>
+      <button type="button" class="med other" id="otherBtn">+ その他の薬</button>
     </div>
+    <input type="text" class="otherinput" id="otherMed" placeholder="薬の名前を入力(例: カロナール)" style="display:none" maxlength="40">
   </div>
 
   <div class="field">
@@ -257,20 +348,36 @@
   <button class="savebtn" id="save">この時刻で保存する</button>
 </div>
 
+<h2>直近30日のようす</h2>
+<div class="stats">
+  <div class="stat" id="stHead"><div class="num">0</div><div class="lbl">頭痛があった日</div><div class="thresh">&nbsp;</div></div>
+  <div class="stat" id="stN"><div class="num">0</div><div class="lbl">NSAIDs服用日</div><div class="thresh">目安 15日未満</div></div>
+  <div class="stat" id="stT"><div class="num">0</div><div class="lbl">トリプタン服用日</div><div class="thresh">目安 10日未満</div></div>
+</div>
+<div class="warnmsg" id="warnmsg">⚠ 服用日数が多めです。薬剤の使用過多による頭痛(MOH)の可能性もあるため、受診時に医師へ相談を。</div>
+
 <h2>タイムライン(直近60日・→今日)</h2>
 <div class="tl-wrap"><div class="tl" id="tl"></div></div>
 <div class="tl-legend">
-  <span class="l-p1">軽い</span><span class="l-p2">中くらい</span><span class="l-p3">激しい</span>
-  <span class="l-n">N = NSAIDs</span><span class="l-t">T = トリプタン</span>
+  <span class="l-p1">軽い</span><span class="l-p2">中くらい</span><span class="l-p3">激しい</span><span class="l-p4">最悪</span>
+  <span class="l-n">N=NSAIDs</span><span class="l-t">T=トリプタン</span><span class="l-o">他</span>
 </div>
 
-<h2 id="monthTitle">今月のようす</h2>
-<div class="stats">
-  <div class="stat" id="stHead"><div class="num">0</div><div class="lbl">頭痛があった日</div><div class="thresh">&nbsp;</div></div>
-  <div class="stat" id="stN"><div class="num">0</div><div class="lbl">NSAIDs服用日</div><div class="thresh">目安 月15日未満</div></div>
-  <div class="stat" id="stT"><div class="num">0</div><div class="lbl">トリプタン服用日</div><div class="thresh">目安 月10日未満</div></div>
+<h2>ふりかえり(月間統計)</h2>
+<div class="card">
+  <div class="rv-nav">
+    <button id="rvPrev">‹</button>
+    <div class="rv-title" id="rvTitle">----年--月</div>
+    <button id="rvNext">›</button>
+  </div>
+  <div class="cal-head"><div>日</div><div>月</div><div>火</div><div>水</div><div>木</div><div>金</div><div>土</div></div>
+  <div class="cal" id="cal"></div>
+  <div class="rv-sum" id="rvSum"></div>
+  <div class="rv-sub">痛みの強さ別の回数</div>
+  <div id="rvPain"></div>
+  <div class="rv-sub">曜日別の頭痛日数</div>
+  <div id="rvDow"></div>
 </div>
-<div class="warnmsg" id="warnmsg">⚠ 服用日数が多めです。薬剤の使用過多による頭痛(MOH)の可能性もあるため、受診時に医師へ相談を。</div>
 
 <h2>これまでの記録</h2>
 <div class="card" id="recwrap">
@@ -289,7 +396,7 @@
     <button class="expbtn" id="impJson">バックアップを復元</button>
   </div>
   <input type="file" id="impFile" accept=".json,application/json" style="display:none">
-  <div class="note">CSVの列: datetime(ISO形式) / pain_level(0-3) / pain_label / medications / med_class / memo。表計算ソフトやAI分析にそのまま使える形式です。コピーしてClaudeに貼れば傾向分析もできます。バックアップ(JSON)は月1回ほど「ファイル」アプリに保存しておくと安心。機種変更やデータ消失時も「復元」で全記録が戻ります。</div>
+  <div class="note">CSVの列: datetime(ISO形式) / pain_level(0-4) / pain_label / nausea(0-2) / nausea_label / medications / med_class / memo。表計算ソフトやAI分析にそのまま使える形式です。バックアップ(JSON)は月1回「ファイル」アプリに保存しておくと安心。復元で全記録が戻ります。</div>
 </div>
 
 <div class="toast" id="toast">保存しました</div>
@@ -297,35 +404,44 @@
 <script>
 (function(){
   var KEY='migraine-records-v1';
+  var KEYM='migraine-meta-v1';
   var NSAIDS=['イブプロフェン','ロキソプロフェン'];
   var TRIPTANS=['スマトリプタン','ゾルミトリプタン','エレトリプタン','リザトリプタン'];
-  var PAIN_LABEL=['なし','軽い','中くらい','激しい'];
-  var PAIN_COLOR=['#5f6b78','#8fbf9f','#e0b45f','#d97a7a'];
+  var PAIN_LABEL=['なし','軽い','中くらい','激しい','最悪'];
+  var PAIN_COLOR=['#b9c4cc','#5fa8dc','#f0b83e','#e4726b','#9b6fc9'];
+  var PAIN_TINT=['','#eaf3fb','#fdf5e2','#fceceb','#f3ecfa'];
+  var NAUSEA_LABEL=['なし','吐き気あり','吐いた'];
   var WDAY=['日','月','火','水','木','金','土'];
   var PX=16;               // 1時間あたりのピクセル
   var HOUR=3600000;
+  var DAYMS=86400000;
 
-  var records=[];          // {id, ts:"YYYY-MM-DDTHH:MM", pain:0-3, meds:[], memo:""}
+  var records=[];          // {id, ts, pain:0-4, nausea:0-2, meds:[], memo}
+  var meta={};             // {lastBackup, snoozeUntil}
   var showCount=10;
-  var mode='none';         // 'claude'=Claudeの保存機能 / 'local'=端末内(localStorage) / 'none'=保存不可
+  var mode='none';         // 'claude' | 'local' | 'none'
+  var rvOffset=0;          // ふりかえりの月オフセット(0=今月, -1=先月...)
 
-  /* ---------- storage ----------
-     Claude内で開いた場合はClaudeの保存機能、
-     自前ホスティング(GitHub Pages等)で開いた場合は端末内のlocalStorageに保存 */
+  /* ---------- storage ---------- */
   function canLocal(){
     try{ localStorage.setItem('__t','1'); localStorage.removeItem('__t'); return true; }
     catch(e){ return false; }
   }
-  function loadRecords(){
+  function loadAll(){
     if(window.storage){
       mode='claude';
-      return window.storage.get(KEY).then(function(r){
+      var p1=window.storage.get(KEY).then(function(r){
         if(r && r.value){ try{ records=JSON.parse(r.value)||[]; }catch(e){ records=[]; } }
-      }).catch(function(){ /* キー未作成 */ });
+      }).catch(function(){});
+      var p2=window.storage.get(KEYM).then(function(r){
+        if(r && r.value){ try{ meta=JSON.parse(r.value)||{}; }catch(e){ meta={}; } }
+      }).catch(function(){});
+      return Promise.all([p1,p2]);
     }
     if(canLocal()){
       mode='local';
       try{ var v=localStorage.getItem(KEY); if(v) records=JSON.parse(v)||[]; }catch(e){ records=[]; }
+      try{ var m=localStorage.getItem(KEYM); if(m) meta=JSON.parse(m)||{}; }catch(e){ meta={}; }
       return Promise.resolve();
     }
     mode='none';
@@ -340,6 +456,16 @@
     if(mode==='local'){
       try{ localStorage.setItem(KEY, JSON.stringify(records)); }
       catch(e){ toast('保存に失敗しました(容量を確認)'); }
+      return Promise.resolve();
+    }
+    return Promise.resolve();
+  }
+  function persistMeta(){
+    if(mode==='claude'){
+      return window.storage.set(KEYM, JSON.stringify(meta)).catch(function(){});
+    }
+    if(mode==='local'){
+      try{ localStorage.setItem(KEYM, JSON.stringify(meta)); }catch(e){}
       return Promise.resolve();
     }
     return Promise.resolve();
@@ -364,6 +490,8 @@
     var d=Math.floor(h/24);
     return d+'日'+(h%24?(h%24)+'時間':'');
   }
+  function pv(r){ return typeof r.pain==='number'?r.pain:0; }
+  function nv(r){ return typeof r.nausea==='number'?r.nausea:0; }
 
   /* ---------- 時間軸ピッカー ---------- */
   var pkStart, pkEnd, selTime;
@@ -371,8 +499,8 @@
 
   function buildPicker(){
     var now=new Date();
-    pkEnd=new Date(Math.ceil(now.getTime()/600000)*600000);   // 10分切り上げ
-    var startDay=new Date(now.getTime()-59*86400000);
+    pkEnd=new Date(Math.ceil(now.getTime()/600000)*600000);
+    var startDay=new Date(now.getTime()-59*DAYMS);
     records.forEach(function(r){ var d=parseTs(r.ts); if(d<startDay) startDay=d; });
     startDay=new Date(startDay.getFullYear(),startDay.getMonth(),startDay.getDate());
     pkStart=startDay;
@@ -397,9 +525,7 @@
         html+='<div class="pk-hour" style="left:'+hx+'px">'+h+'</div>';
         html+='<div class="pk-tick" style="left:'+hx+'px"></div>';
       }
-      // 夜間帯(21時〜翌6時)をうっすら暗く
-      var n1=(d-pkStart)/HOUR*PX, n2=n1+6*PX;                    // 0〜6時
-      html+='<div class="pk-night" style="left:'+n1+'px;width:'+Math.min(6*PX,(pkEnd-d)/HOUR*PX)+'px"></div>';
+      html+='<div class="pk-night" style="left:'+((d-pkStart)/HOUR*PX)+'px;width:'+Math.min(6*PX,(pkEnd-d)/HOUR*PX)+'px"></div>';
       var e1=new Date(d.getTime()+21*HOUR);
       if(e1<pkEnd){
         var w=Math.min(3*HOUR,pkEnd-e1)/HOUR*PX;
@@ -418,18 +544,20 @@
       var t=parseTs(r.ts);
       if(t<pkStart||t>pkEnd) return;
       var x=(t-pkStart)/HOUR*PX;
-      if(r.pain>=1) html+='<div class="pk-mark p'+r.pain+'" style="left:'+x+'px" title="'+r.ts+' '+PAIN_LABEL[r.pain]+'"></div>';
-      var hasN=false,hasT=false;
-      r.meds.forEach(function(m){ var c=medClass(m); if(c==='NSAID')hasN=true; if(c==='triptan')hasT=true; });
+      var p=pv(r);
+      if(p>=1) html+='<div class="pk-mark p'+p+'" style="left:'+x+'px"></div>';
+      var hasN=false,hasT=false,hasO=false;
+      (r.meds||[]).forEach(function(m){ var c=medClass(m); if(c==='NSAID')hasN=true; else if(c==='triptan')hasT=true; else hasO=true; });
       if(hasN) html+='<div class="pk-med n" style="left:'+x+'px">N</div>';
       if(hasT) html+='<div class="pk-med t" style="left:'+x+'px">T</div>';
+      if(hasO) html+='<div class="pk-med o" style="left:'+x+'px">他</div>';
     });
     layer.innerHTML=html;
   }
 
   function timeFromScroll(){
     var ms=pkStart.getTime()+pkScroll.scrollLeft/PX*HOUR;
-    ms=Math.round(ms/600000)*600000;                             // 10分スナップ
+    ms=Math.round(ms/600000)*600000;
     ms=Math.max(pkStart.getTime(),Math.min(pkEnd.getTime(),ms));
     return new Date(ms);
   }
@@ -439,12 +567,11 @@
   function updateSelected(){
     selTime=timeFromScroll();
     $('pkTime').textContent=(selTime.getMonth()+1)+'/'+selTime.getDate()+'('+WDAY[selTime.getDay()]+') '+pad(selTime.getHours())+':'+pad(selTime.getMinutes());
-    // 選択時点での「前回服薬から」
     var lastN=null,lastT=null;
     records.forEach(function(r){
       var t=parseTs(r.ts);
       if(t>selTime) return;
-      r.meds.forEach(function(m){
+      (r.meds||[]).forEach(function(m){
         var c=medClass(m);
         if(c==='NSAID'&&(!lastN||t>lastN)) lastN=t;
         if(c==='triptan'&&(!lastT||t>lastT)) lastT=t;
@@ -460,16 +587,15 @@
     raf=requestAnimationFrame(function(){ raf=null; updateSelected(); });
   });
   $('pkNow').addEventListener('click',function(){
-    // 「今」が進んでいる場合は軸を作り直して右端へ
     buildPicker();
     requestAnimationFrame(function(){ scrollToTime(new Date()); updateSelected(); });
   });
 
-  /* ---------- render: 前回の服薬(現在) ---------- */
+  /* ---------- 前回の服薬(現在) ---------- */
   function renderSince(){
     var lastN=null,lastT=null;
     records.forEach(function(r){
-      r.meds.forEach(function(m){
+      (r.meds||[]).forEach(function(m){
         var c=medClass(m);
         if(c==='NSAID'&&(!lastN||r.ts>lastN.ts)) lastN={ts:r.ts,med:m};
         if(c==='triptan'&&(!lastT||r.ts>lastT.ts)) lastT={ts:r.ts,med:m};
@@ -486,54 +612,59 @@
     fill($('sinceT'),lastT);
   }
 
-  /* ---------- render: 日ごとタイムライン ---------- */
-  function renderTimeline(){
-    var tl=$('tl'); tl.innerHTML='';
+  /* ---------- 日ごとタイムライン(60日) ---------- */
+  function aggregateByDay(){
     var byDay={};
     records.forEach(function(r){
       var k=dateKey(r.ts);
-      var o=byDay[k]||(byDay[k]={pain:0,n:false,t:false});
-      if(r.pain>o.pain) o.pain=r.pain;
-      r.meds.forEach(function(m){
+      var o=byDay[k]||(byDay[k]={pain:0,n:false,t:false,o:false});
+      var p=pv(r);
+      if(p>o.pain) o.pain=p;
+      (r.meds||[]).forEach(function(m){
         var c=medClass(m);
         if(c==='NSAID') o.n=true;
-        if(c==='triptan') o.t=true;
+        else if(c==='triptan') o.t=true;
+        else o.o=true;
       });
     });
+    return byDay;
+  }
+  function renderTimeline(){
+    var tl=$('tl'); tl.innerHTML='';
+    var byDay=aggregateByDay();
     var today=new Date(); today.setHours(0,0,0,0);
     var todayKey=localDT(today).slice(0,10);
+    var heights=[4,22,40,58,76];
     for(var i=59;i>=0;i--){
-      var d=new Date(today.getTime()-i*86400000);
+      var d=new Date(today.getTime()-i*DAYMS);
       var k=d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
       var o=byDay[k];
       var div=document.createElement('div');
       div.className='day'+(k===todayKey?' today':'');
       var p=o?o.pain:0;
-      var h=p===0?4:(p===1?28:(p===2?52:76));
-      var bar='<div class="bar" style="height:'+h+'px;background:'+(p?PAIN_COLOR[p]:'var(--line)')+'"></div>';
+      var bar='<div class="bar" style="height:'+heights[p]+'px;'+(p?'background:'+PAIN_COLOR[p]:'')+'"></div>';
       var dots='<div class="dots">'+
         (o&&o.n?'<div class="dot n">N</div>':'')+
-        (o&&o.t?'<div class="dot t">T</div>':'')+'</div>';
+        (o&&o.t?'<div class="dot t">T</div>':'')+
+        (o&&o.o?'<div class="dot o">他</div>':'')+'</div>';
       var lbl='<div class="dlbl">'+(d.getMonth()+1)+'/'+d.getDate()+'</div>';
       div.innerHTML=bar+dots+lbl;
-      if(o) div.title=k+' 痛み:'+PAIN_LABEL[p]+(o.n?' NSAIDs':'')+(o.t?' トリプタン':'');
       tl.appendChild(div);
     }
     var wrap=tl.parentElement;
     requestAnimationFrame(function(){ wrap.scrollLeft=wrap.scrollWidth; });
   }
 
-  /* ---------- render: 今月 ---------- */
-  function renderMonth(){
-    var now=new Date();
-    var prefix=now.getFullYear()+'-'+pad(now.getMonth()+1);
-    $('monthTitle').textContent=(now.getMonth()+1)+'月のようす';
+  /* ---------- 直近30日 ---------- */
+  function renderRecent30(){
+    var today=new Date(); today.setHours(0,0,0,0);
+    var cutKey=localDT(new Date(today.getTime()-29*DAYMS)).slice(0,10);
     var headDays={},nDays={},tDays={};
     records.forEach(function(r){
-      if(r.ts.slice(0,7)!==prefix) return;
       var k=dateKey(r.ts);
-      if(r.pain>=1) headDays[k]=1;
-      r.meds.forEach(function(m){
+      if(k<cutKey) return;
+      if(pv(r)>=1) headDays[k]=1;
+      (r.meds||[]).forEach(function(m){
         var c=medClass(m);
         if(c==='NSAID') nDays[k]=1;
         if(c==='triptan') tDays[k]=1;
@@ -549,7 +680,100 @@
     $('warnmsg').classList.toggle('show',warnN||warnT);
   }
 
-  /* ---------- render: 履歴 ---------- */
+  /* ---------- ふりかえり(月間統計) ---------- */
+  function renderReview(){
+    var now=new Date();
+    var y=now.getFullYear(), m0=now.getMonth()+rvOffset;
+    var base=new Date(y,m0,1);
+    y=base.getFullYear(); var m=base.getMonth();
+    $('rvTitle').textContent=y+'年'+(m+1)+'月';
+    $('rvNext').disabled=(rvOffset>=0);
+
+    var prefix=y+'-'+pad(m+1);
+    var byDay={};
+    var painCount=[0,0,0,0,0];
+    var attacks=0, painSum=0;
+    var nDays={},tDays={},headDays={};
+    records.forEach(function(r){
+      if(r.ts.slice(0,7)!==prefix) return;
+      var k=dateKey(r.ts);
+      var o=byDay[k]||(byDay[k]={pain:0,n:false,t:false,o:false});
+      var p=pv(r);
+      if(p>o.pain) o.pain=p;
+      if(p>=1){ painCount[p]++; attacks++; painSum+=p; headDays[k]=1; }
+      (r.meds||[]).forEach(function(md){
+        var c=medClass(md);
+        if(c==='NSAID'){ o.n=true; nDays[k]=1; }
+        else if(c==='triptan'){ o.t=true; tDays[k]=1; }
+        else o.o=true;
+      });
+    });
+
+    // カレンダー
+    var cal=$('cal'); cal.innerHTML='';
+    var firstDow=new Date(y,m,1).getDay();
+    var daysInMonth=new Date(y,m+1,0).getDate();
+    var todayKey=localDT(new Date()).slice(0,10);
+    var i;
+    for(i=0;i<firstDow;i++){
+      var b=document.createElement('div'); b.className='cell blank'; cal.appendChild(b);
+    }
+    for(i=1;i<=daysInMonth;i++){
+      var k=prefix+'-'+pad(i);
+      var o=byDay[k];
+      var cell=document.createElement('div');
+      cell.className='cell'+(o&&o.pain?' haspain':'')+(k===todayKey?' today':'');
+      if(o&&o.pain) cell.style.background=PAIN_TINT[o.pain];
+      var marks='';
+      if(o){
+        marks='<div class="cmark">'+
+          (o.n?'<div class="cm n"></div>':'')+
+          (o.t?'<div class="cm t"></div>':'')+
+          (o.o?'<div class="cm o"></div>':'')+'</div>';
+      }
+      cell.innerHTML='<span class="dn">'+i+'</span>'+marks;
+      cal.appendChild(cell);
+    }
+
+    // サマリー
+    var avg=attacks?(painSum/attacks).toFixed(1):'-';
+    $('rvSum').innerHTML=
+      '<div class="s"><div class="n">'+Object.keys(headDays).length+'</div><div class="l">頭痛日数</div></div>'+
+      '<div class="s"><div class="n">'+attacks+'</div><div class="l">発作回数</div></div>'+
+      '<div class="s"><div class="n">'+avg+'</div><div class="l">平均強度</div></div>'+
+      '<div class="s"><div class="n">'+Object.keys(nDays).length+'/'+Object.keys(tDays).length+'</div><div class="l">服薬日 N/T</div></div>';
+
+    // 強さ別回数
+    var maxP=Math.max(1,painCount[1],painCount[2],painCount[3],painCount[4]);
+    var ph='';
+    for(i=1;i<=4;i++){
+      ph+='<div class="brow'+(painCount[i]?'':' dim')+'">'+
+        '<div class="bl">'+PAIN_LABEL[i]+'</div>'+
+        '<div class="btrack"><div class="bfill" style="width:'+Math.round(painCount[i]/maxP*100)+'%;background:'+PAIN_COLOR[i]+'"></div></div>'+
+        '<div class="bn">'+painCount[i]+'</div></div>';
+    }
+    $('rvPain').innerHTML=ph;
+
+    // 曜日別頭痛日数
+    var dow=[0,0,0,0,0,0,0];
+    Object.keys(headDays).forEach(function(k){
+      dow[parseTs(k+'T00:00').getDay()]++;
+    });
+    var maxD=Math.max.apply(null,dow.concat([1]));
+    var dh='';
+    for(i=0;i<7;i++){
+      var col=i===0?'var(--sun)':(i===6?'var(--sat)':'var(--accent)');
+      dh+='<div class="brow'+(dow[i]?'':' dim')+'">'+
+        '<div class="bl">'+WDAY[i]+'曜</div>'+
+        '<div class="btrack"><div class="bfill" style="width:'+Math.round(dow[i]/maxD*100)+'%;background:'+col+'"></div></div>'+
+        '<div class="bn">'+dow[i]+'</div></div>';
+    }
+    $('rvDow').innerHTML=dh;
+  }
+  $('rvPrev').addEventListener('click',function(){ rvOffset--; renderReview(); });
+  $('rvNext').addEventListener('click',function(){ if(rvOffset<0){ rvOffset++; renderReview(); } });
+
+  /* ---------- 履歴 ---------- */
   function renderRecs(){
     var wrap=$('recs'); wrap.innerHTML='';
     if(records.length===0){
@@ -562,11 +786,12 @@
       var d=parseTs(r.ts);
       var row=document.createElement('div'); row.className='rec';
       var what=[];
-      if(r.pain>=1) what.push('痛み: '+PAIN_LABEL[r.pain]);
-      if(r.meds.length) what.push(r.meds.join('、'));
+      if(pv(r)>=1) what.push('痛み: '+PAIN_LABEL[pv(r)]);
+      if(nv(r)>=1) what.push(NAUSEA_LABEL[nv(r)]);
+      if((r.meds||[]).length) what.push(r.meds.join('、'));
       if(!what.length) what.push('記録のみ');
       row.innerHTML=
-        '<div class="pchip" style="background:'+PAIN_COLOR[r.pain]+'"></div>'+
+        '<div class="pchip" style="background:'+PAIN_COLOR[pv(r)]+'"></div>'+
         '<div class="body"><div class="when">'+(d.getMonth()+1)+'/'+d.getDate()+'('+WDAY[d.getDay()]+') '+pad(d.getHours())+':'+pad(d.getMinutes())+'</div>'+
         '<div class="what"></div>'+(r.memo?'<div class="memo"></div>':'')+'</div>'+
         '<button class="del" aria-label="削除">✕</button>';
@@ -581,38 +806,81 @@
     });
     $('more').style.display=sorted.length>showCount?'block':'none';
   }
+  $('more').addEventListener('click',function(){ showCount+=20; renderRecs(); });
+
+  /* ---------- バックアップ促し ---------- */
+  function renderBanner(){
+    var el=$('bkBanner');
+    if(!records.length){ el.style.display='none'; return; }
+    var nowStr=localDT(new Date());
+    if(meta.snoozeUntil && meta.snoozeUntil>nowStr){ el.style.display='none'; return; }
+    var limit=new Date(Date.now()-30*DAYMS);
+    var show=false, txt='';
+    if(meta.lastBackup){
+      if(parseTs(meta.lastBackup)<limit){
+        show=true;
+        txt='最後のバックアップから'+Math.floor((Date.now()-parseTs(meta.lastBackup).getTime())/DAYMS)+'日たちました。';
+      }
+    }else{
+      var oldest=records.reduce(function(a,r){ return r.ts<a?r.ts:a; },records[0].ts);
+      if(parseTs(oldest)<limit){ show=true; txt='まだ一度もバックアップしていません。'; }
+    }
+    if(show){ $('bkText').textContent=txt+' 記録を守るためにバックアップを。'; el.style.display='flex'; }
+    else el.style.display='none';
+  }
+  $('bkNow').addEventListener('click',function(){ doBackup(); });
+  $('bkClose').addEventListener('click',function(){
+    meta.snoozeUntil=localDT(new Date(Date.now()+7*DAYMS));
+    persistMeta(); renderBanner();
+  });
 
   function renderAll(){
-    renderSince(); renderTimeline(); renderMonth(); renderRecs(); renderPickerMarks(); updateSelected();
+    renderSince(); renderTimeline(); renderRecent30(); renderReview(); renderRecs();
+    renderPickerMarks(); updateSelected(); renderBanner();
   }
 
   /* ---------- form ---------- */
-  var selPain=0;
+  var selPain=0, selNausea=0;
   $('faces').addEventListener('click',function(e){
     var f=e.target.closest('.face'); if(!f) return;
     selPain=+f.dataset.p;
     document.querySelectorAll('.face').forEach(function(x){ x.classList.toggle('sel',x===f); });
   });
+  $('nauseas').addEventListener('click',function(e){
+    var b=e.target.closest('.nausea'); if(!b) return;
+    selNausea=+b.dataset.n;
+    document.querySelectorAll('.nausea').forEach(function(x){ x.classList.toggle('sel',x===b); });
+  });
   $('meds').addEventListener('click',function(e){
     var b=e.target.closest('.med'); if(!b) return;
     b.classList.toggle('sel');
+    if(b.id==='otherBtn'){
+      var on=b.classList.contains('sel');
+      $('otherMed').style.display=on?'block':'none';
+      if(on) $('otherMed').focus();
+    }
   });
   $('save').addEventListener('click',function(){
     if(!selTime){ toast('日時を選んでください'); return; }
-    var meds=[].map.call(document.querySelectorAll('.med.sel'),function(b){ return b.dataset.med; });
+    var meds=[].map.call(document.querySelectorAll('.med.sel[data-med]'),function(b){ return b.dataset.med; });
+    if($('otherBtn').classList.contains('sel')){
+      var om=$('otherMed').value.trim();
+      if(om) meds.push(om);
+    }
     var memo=$('memo').value.trim();
-    if(selPain===0&&meds.length===0&&!memo){ toast('痛み・くすり・メモのどれかを入力'); return; }
-    records.push({ id:Date.now()+'-'+Math.random().toString(36).slice(2,7), ts:localDT(selTime), pain:selPain, meds:meds, memo:memo });
+    if(selPain===0&&selNausea===0&&meds.length===0&&!memo){ toast('痛み・吐き気・くすり・メモのどれかを入力'); return; }
+    records.push({ id:Date.now()+'-'+Math.random().toString(36).slice(2,7), ts:localDT(selTime), pain:selPain, nausea:selNausea, meds:meds, memo:memo });
     persist().then(function(){
-      selPain=0;
+      selPain=0; selNausea=0;
       document.querySelectorAll('.face').forEach(function(x){ x.classList.toggle('sel',x.dataset.p==='0'); });
+      document.querySelectorAll('.nausea').forEach(function(x){ x.classList.toggle('sel',x.dataset.n==='0'); });
       document.querySelectorAll('.med.sel').forEach(function(x){ x.classList.remove('sel'); });
+      $('otherMed').value=''; $('otherMed').style.display='none';
       $('memo').value='';
       renderAll();
       toast(mode==='none'?'保存(この画面を閉じると消えます)':'保存しました');
     });
   });
-  $('more').addEventListener('click',function(){ showCount+=20; renderRecs(); });
 
   /* ---------- CSV ---------- */
   function csvEscape(s){
@@ -620,10 +888,10 @@
     return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;
   }
   function buildCsv(){
-    var rows=[['datetime','pain_level','pain_label','medications','med_class','memo']];
+    var rows=[['datetime','pain_level','pain_label','nausea','nausea_label','medications','med_class','memo']];
     records.slice().sort(function(a,b){ return a.ts<b.ts?-1:1; }).forEach(function(r){
-      var classes=r.meds.map(medClass).filter(function(v,i,a){ return a.indexOf(v)===i; });
-      rows.push([r.ts,r.pain,PAIN_LABEL[r.pain],r.meds.join(';'),classes.join(';'),r.memo||'']);
+      var classes=(r.meds||[]).map(medClass).filter(function(v,i,a){ return a.indexOf(v)===i; });
+      rows.push([r.ts,pv(r),PAIN_LABEL[pv(r)],nv(r),NAUSEA_LABEL[nv(r)],(r.meds||[]).join(';'),classes.join(';'),r.memo||'']);
     });
     return rows.map(function(row){ return row.map(csvEscape).join(','); }).join('\n');
   }
@@ -643,16 +911,28 @@
       navigator.clipboard.writeText(text).then(function(){ toast('コピーしました'); },function(){ fallbackCopy(text); });
     }else fallbackCopy(text);
   });
+  function fallbackCopy(text){
+    var ta=document.createElement('textarea');
+    ta.value=text; ta.style.position='fixed'; ta.style.opacity='0';
+    document.body.appendChild(ta); ta.select();
+    try{ document.execCommand('copy'); toast('コピーしました'); }catch(e){ toast('コピーできませんでした'); }
+    ta.remove();
+  }
+
   /* ---------- バックアップ(JSON) ---------- */
-  $('expJson').addEventListener('click',function(){
+  function doBackup(){
     if(!records.length){ toast('記録がありません'); return; }
-    var blob=new Blob([JSON.stringify({app:'zutsu-log',version:1,exported:localDT(new Date()),records:records},null,1)],{type:'application/json'});
+    var blob=new Blob([JSON.stringify({app:'zutsu-log',version:2,exported:localDT(new Date()),records:records},null,1)],{type:'application/json'});
     var a=document.createElement('a');
     a.href=URL.createObjectURL(blob);
     a.download='zutsu-log-backup-'+localDT(new Date()).slice(0,10)+'.json';
     document.body.appendChild(a); a.click();
     setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); },1000);
-  });
+    meta.lastBackup=localDT(new Date());
+    delete meta.snoozeUntil;
+    persistMeta(); renderBanner();
+  }
+  $('expJson').addEventListener('click',doBackup);
   $('impJson').addEventListener('click',function(){ $('impFile').click(); });
   $('impFile').addEventListener('change',function(){
     var f=this.files[0]; this.value='';
@@ -671,7 +951,7 @@
       var byId={};
       records.concat(incoming).forEach(function(r){
         var id=r.id||(r.ts+'-'+r.pain+'-'+(r.meds||[]).join(';'));
-        byId[id]={ id:id, ts:r.ts, pain:r.pain, meds:r.meds||[], memo:r.memo||'' };
+        byId[id]={ id:id, ts:r.ts, pain:pv(r), nausea:nv(r), meds:r.meds||[], memo:r.memo||'' };
       });
       records=Object.keys(byId).map(function(k){ return byId[k]; });
       persist().then(function(){ buildPicker(); renderAll(); toast('復元しました('+records.length+'件)'); });
@@ -679,18 +959,10 @@
     reader.readAsText(f);
   });
 
-  function fallbackCopy(text){
-    var ta=document.createElement('textarea');
-    ta.value=text; ta.style.position='fixed'; ta.style.opacity='0';
-    document.body.appendChild(ta); ta.select();
-    try{ document.execCommand('copy'); toast('コピーしました'); }catch(e){ toast('コピーできませんでした'); }
-    ta.remove();
-  }
-
   /* ---------- init ---------- */
-  loadRecords().then(function(){
+  loadAll().then(function(){
     buildPicker();
-    renderSince(); renderTimeline(); renderMonth(); renderRecs();
+    renderSince(); renderTimeline(); renderRecent30(); renderReview(); renderRecs(); renderBanner();
     requestAnimationFrame(function(){
       scrollToTime(new Date());
       updateSelected();
