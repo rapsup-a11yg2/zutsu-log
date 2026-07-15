@@ -21,7 +21,6 @@
     --p1:#5fa8dc;
     --p2:#f0b83e;
     --p3:#e4726b;
-    --p4:#9b6fc9;
     --danger:#d9645c;
     --sat:#5fa8dc;
     --sun:#d9645c;
@@ -88,10 +87,9 @@
   .pk-tick{position:absolute;top:36px;width:1px;height:5px;background:var(--line)}
   .pk-night{position:absolute;top:44px;bottom:0;background:rgba(90,120,140,.07)}
   .pk-mark{position:absolute;transform:translateX(-50%);border-radius:50%}
-  .pk-mark.p1{width:10px;height:10px;background:var(--p1);top:58px}
-  .pk-mark.p2{width:13px;height:13px;background:var(--p2);top:56px}
-  .pk-mark.p3{width:16px;height:16px;background:var(--p3);top:55px}
-  .pk-mark.p4{width:19px;height:19px;background:var(--p4);top:53px}
+  .pk-mark.p1{width:11px;height:11px;background:var(--p1);top:57px}
+  .pk-mark.p2{width:14px;height:14px;background:var(--p2);top:55px}
+  .pk-mark.p3{width:18px;height:18px;background:var(--p3);top:53px}
   .pk-med{
     position:absolute;transform:translateX(-50%);width:15px;height:15px;border-radius:4px;
     font-size:9px;line-height:15px;text-align:center;color:#fff;font-weight:700;
@@ -108,20 +106,28 @@
 
   /* ---- 記録フォーム ---- */
   label.small{display:block;font-size:12px;color:var(--sub);margin-bottom:6px}
-  .faces{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:4px}
+  .editbar{
+    display:flex;align-items:center;gap:10px;margin-bottom:12px;
+    background:#e2f2f0;border:1px solid var(--accent);border-radius:12px;padding:9px 12px;
+  }
+  .editbar .et{flex:1;font-size:13px;font-weight:700;color:var(--accent)}
+  .editbar button{
+    background:none;border:1px solid var(--accent);color:var(--accent);
+    border-radius:999px;padding:6px 14px;font-size:13px;cursor:pointer;font-family:inherit;
+  }
+  .faces{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:4px}
   .face{
     background:var(--surface);border:2px solid var(--line);border-radius:14px;
-    padding:9px 2px 7px;text-align:center;cursor:pointer;user-select:none;
+    padding:10px 3px 8px;text-align:center;cursor:pointer;user-select:none;
   }
-  .face .icon{font-size:24px;line-height:1;display:block;filter:grayscale(1);opacity:.45}
-  .face .lbl{font-size:10px;color:var(--sub);margin-top:5px;display:block}
+  .face .icon{font-size:25px;line-height:1;display:block;filter:grayscale(1);opacity:.45}
+  .face .lbl{font-size:11px;color:var(--sub);margin-top:5px;display:block}
   .face.sel .icon{filter:none;opacity:1}
   .face.sel .lbl{color:var(--text);font-weight:700}
   .face.sel[data-p="0"]{border-color:var(--p0);background:#f2f5f7}
   .face.sel[data-p="1"]{border-color:var(--p1);background:#eaf3fb}
   .face.sel[data-p="2"]{border-color:var(--p2);background:#fdf5e2}
   .face.sel[data-p="3"]{border-color:var(--p3);background:#fceceb}
-  .face.sel[data-p="4"]{border-color:var(--p4);background:#f3ecfa}
 
   .nauseas{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:4px}
   .nausea{
@@ -159,11 +165,14 @@
   .savebtn:active{opacity:.85}
   .field{margin-top:16px}
 
-  /* ---- 日ごとタイムライン ---- */
+  /* ---- 日ごとタイムライン(積み上げ) ---- */
   .tl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:12px 10px 8px}
-  .tl{display:flex;align-items:flex-end;gap:3px;min-height:130px}
-  .day{width:18px;flex:0 0 18px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:130px}
-  .bar{width:12px;border-radius:4px 4px 2px 2px;background:var(--surface2)}
+  .tl{display:flex;align-items:flex-end;gap:3px;min-height:150px}
+  .day{width:18px;flex:0 0 18px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:150px}
+  .astack{display:flex;flex-direction:column-reverse;gap:2px;justify-content:flex-start;min-height:86px}
+  .aball{width:12px;height:12px;border-radius:50%}
+  .amore{font-size:8px;color:var(--sub);text-align:center}
+  .base{width:12px;height:3px;border-radius:2px;background:var(--surface2);margin-top:2px}
   .dots{display:flex;flex-direction:column;gap:2px;margin-top:3px;min-height:34px;justify-content:flex-start}
   .dot{width:10px;height:10px;border-radius:3px;font-size:7px;line-height:10px;text-align:center;color:#fff;font-weight:700}
   .dot.n{background:var(--nsaid)}
@@ -172,14 +181,13 @@
   .dlbl{font-size:9px;color:var(--sub);margin-top:4px;writing-mode:vertical-rl;height:26px}
   .day.today .dlbl{color:var(--accent);font-weight:700}
   .tl-legend{display:flex;gap:12px;font-size:11px;color:var(--sub);margin-top:8px;flex-wrap:wrap}
-  .tl-legend span::before{content:"";display:inline-block;width:9px;height:9px;border-radius:3px;margin-right:4px;vertical-align:-1px}
+  .tl-legend span::before{content:"";display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:4px;vertical-align:-1px}
   .tl-legend .l-p1::before{background:var(--p1)}
   .tl-legend .l-p2::before{background:var(--p2)}
   .tl-legend .l-p3::before{background:var(--p3)}
-  .tl-legend .l-p4::before{background:var(--p4)}
-  .tl-legend .l-n::before{background:var(--nsaid)}
-  .tl-legend .l-t::before{background:var(--triptan)}
-  .tl-legend .l-o::before{background:var(--other)}
+  .tl-legend .l-n::before{background:var(--nsaid);border-radius:3px}
+  .tl-legend .l-t::before{background:var(--triptan);border-radius:3px}
+  .tl-legend .l-o::before{background:var(--other);border-radius:3px}
 
   /* ---- 直近30日 ---- */
   .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
@@ -205,18 +213,16 @@
   .cal-head div:last-child{color:var(--sat)}
   .cal{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
   .cell{
-    min-height:46px;border-radius:8px;border:1px solid var(--line);background:var(--surface);
+    min-height:56px;border-radius:8px;border:1px solid var(--line);background:var(--surface);
     padding:3px 4px;position:relative;
   }
   .cell.blank{border:none;background:none}
   .cell .dn{font-size:11px;color:var(--sub);font-variant-numeric:tabular-nums}
   .cell.haspain .dn{color:var(--text);font-weight:700}
   .cell.today{outline:2px solid var(--accent);outline-offset:-1px}
-  .cell .cmark{display:flex;gap:2px;position:absolute;left:4px;bottom:4px}
-  .cell .cm{width:6px;height:6px;border-radius:2px}
-  .cell .cm.n{background:var(--nsaid)}
-  .cell .cm.t{background:var(--triptan)}
-  .cell .cm.o{background:var(--other)}
+  .cell .cballs{display:flex;flex-direction:column-reverse;gap:2px;position:absolute;left:5px;bottom:5px}
+  .cell .cb{width:8px;height:8px;border-radius:50%}
+  .cell .cmore{font-size:8px;color:var(--sub);line-height:1}
   .rv-sum{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:14px}
   .rv-sum .s{background:var(--surface2);border-radius:10px;padding:8px 4px;text-align:center}
   .rv-sum .s .n{font-size:18px;font-weight:700;font-variant-numeric:tabular-nums}
@@ -229,15 +235,38 @@
   .brow .bn{flex:0 0 28px;font-size:12px;font-variant-numeric:tabular-nums;text-align:right}
   .brow.dim .bfill{opacity:.25}
 
+  /* ---- 年間総括 ---- */
+  .yr-chart{display:flex;align-items:flex-end;gap:4px;height:116px;margin-top:4px}
+  .yr-chart.short{height:76px}
+  .ycol{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;min-width:0}
+  .ycnt{font-size:8px;color:var(--sub);height:11px;line-height:11px;font-variant-numeric:tabular-nums}
+  .ystack{display:flex;flex-direction:column-reverse;width:70%;max-width:22px;border-radius:4px 4px 2px 2px;overflow:hidden}
+  .yseg{width:100%}
+  .ymed{display:flex;gap:2px;width:80%;max-width:24px;align-items:flex-end}
+  .ymb{flex:1;border-radius:3px 3px 0 0}
+  .ylbl{font-size:9px;color:var(--sub);margin-top:3px;font-variant-numeric:tabular-nums}
+
   /* ---- 履歴 ---- */
-  .rec{display:flex;align-items:flex-start;gap:10px;padding:11px 2px;border-bottom:1px solid var(--line)}
+  .rec{padding:11px 2px;border-bottom:1px solid var(--line)}
   .rec:last-child{border-bottom:none}
-  .rec .pchip{width:12px;height:12px;border-radius:4px;margin-top:5px;flex:0 0 12px}
-  .rec .body{flex:1;min-width:0}
-  .rec .when{font-size:13px;color:var(--sub);font-variant-numeric:tabular-nums}
-  .rec .what{font-size:14px;margin-top:1px}
-  .rec .memo{font-size:13px;color:var(--sub);margin-top:1px;white-space:pre-wrap;word-break:break-word}
-  .rec .del{background:none;border:none;color:var(--sub);font-size:18px;cursor:pointer;padding:4px 6px;font-family:inherit}
+  .rec .top{display:flex;align-items:center;gap:8px}
+  .rec .when{flex:1;font-size:13px;color:var(--sub);font-variant-numeric:tabular-nums}
+  .rec .edit,.rec .del{background:none;border:none;color:var(--sub);font-size:16px;cursor:pointer;padding:4px 8px;font-family:inherit}
+  .rec .badges{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+  .badge{
+    font-size:12px;font-weight:700;border-radius:999px;padding:4px 10px;color:#fff;
+  }
+  .badge.b-p0{background:var(--p0)}
+  .badge.b-p1{background:var(--p1)}
+  .badge.b-p2{background:var(--p2)}
+  .badge.b-p3{background:var(--p3)}
+  .badge.b-n1{background:var(--p2)}
+  .badge.b-n2{background:var(--p3)}
+  .badge.b-medn{background:#eaf3fb;color:var(--nsaid);border:1px solid var(--nsaid);font-weight:600}
+  .badge.b-medt{background:#fdf1e7;color:#c26e35;border:1px solid var(--triptan);font-weight:600}
+  .badge.b-medo{background:#f0f3f4;color:#5f6b73;border:1px solid var(--other);font-weight:600}
+  .badge.b-none{background:var(--surface2);color:var(--sub);font-weight:600}
+  .rec .memo{font-size:13px;color:var(--sub);margin-top:5px;white-space:pre-wrap;word-break:break-word}
   .more{width:100%;background:none;border:1px solid var(--line);color:var(--sub);border-radius:10px;padding:9px;font-size:13px;cursor:pointer;margin-top:8px;font-family:inherit}
 
   /* ---- エクスポート ---- */
@@ -302,15 +331,19 @@
   <div class="pk-hint">← 横にスライドして日時を選択(10分単位)。過去の記録と服薬も軸上に表示されます</div>
 </div>
 
-<div class="card" style="margin-top:10px">
+<div class="card" style="margin-top:10px" id="formCard">
+  <div class="editbar" id="editBar" style="display:none">
+    <div class="et">記録を編集中</div>
+    <button id="editCancel">キャンセル</button>
+  </div>
+
   <div class="field" style="margin-top:0">
     <label class="small">痛みは?</label>
     <div class="faces" id="faces">
       <div class="face sel" data-p="0"><span class="icon">🙂</span><span class="lbl">なし</span></div>
-      <div class="face" data-p="1"><span class="icon">😐</span><span class="lbl">軽い</span></div>
-      <div class="face" data-p="2"><span class="icon">😕</span><span class="lbl">中くらい</span></div>
-      <div class="face" data-p="3"><span class="icon">😣</span><span class="lbl">激しい</span></div>
-      <div class="face" data-p="4"><span class="icon">😵</span><span class="lbl">最悪</span></div>
+      <div class="face" data-p="1"><span class="icon">😕</span><span class="lbl">軽い</span></div>
+      <div class="face" data-p="2"><span class="icon">😣</span><span class="lbl">中くらい</span></div>
+      <div class="face" data-p="3"><span class="icon">😵</span><span class="lbl">最悪</span></div>
     </div>
   </div>
 
@@ -337,7 +370,7 @@
       <div class="med-group-lbl">その他</div>
       <button type="button" class="med other" id="otherBtn">+ その他の薬</button>
     </div>
-    <input type="text" class="otherinput" id="otherMed" placeholder="薬の名前を入力(例: カロナール)" style="display:none" maxlength="40">
+    <input type="text" class="otherinput" id="otherMed" placeholder="薬の名前を入力(複数は「、」で区切り)" style="display:none" maxlength="60">
   </div>
 
   <div class="field">
@@ -359,9 +392,10 @@
 <h2>タイムライン(直近60日・→今日)</h2>
 <div class="tl-wrap"><div class="tl" id="tl"></div></div>
 <div class="tl-legend">
-  <span class="l-p1">軽い</span><span class="l-p2">中くらい</span><span class="l-p3">激しい</span><span class="l-p4">最悪</span>
+  <span class="l-p1">軽い</span><span class="l-p2">中くらい</span><span class="l-p3">最悪</span>
   <span class="l-n">N=NSAIDs</span><span class="l-t">T=トリプタン</span><span class="l-o">他</span>
 </div>
+<div class="note">● 1つ = 発作1回。積み上がるほどその日の発作が多かったことを表します。</div>
 
 <h2>ふりかえり(月間統計)</h2>
 <div class="card">
@@ -372,11 +406,27 @@
   </div>
   <div class="cal-head"><div>日</div><div>月</div><div>火</div><div>水</div><div>木</div><div>金</div><div>土</div></div>
   <div class="cal" id="cal"></div>
+  <div class="note">● 1つ = 発作1回(色は痛みの強さ)</div>
   <div class="rv-sum" id="rvSum"></div>
   <div class="rv-sub">痛みの強さ別の回数</div>
   <div id="rvPain"></div>
   <div class="rv-sub">曜日別の頭痛日数</div>
   <div id="rvDow"></div>
+</div>
+
+<h2>1年のようす(年間総括)</h2>
+<div class="card">
+  <div class="rv-nav">
+    <button id="yrPrev">‹</button>
+    <div class="rv-title" id="yrTitle">----年</div>
+    <button id="yrNext">›</button>
+  </div>
+  <div class="rv-sum" id="yrSum"></div>
+  <div class="rv-sub">月別の発作回数(色=痛みの強さ)</div>
+  <div class="yr-chart" id="yrAttacks"></div>
+  <div class="rv-sub">月別の服薬日数(青=NSAIDs・橙=トリプタン)</div>
+  <div class="yr-chart short" id="yrMeds"></div>
+  <div class="note">服薬日数が目安(NSAIDs 月15日・トリプタン 月10日)以上になった月は赤い棒で表示されます。</div>
 </div>
 
 <h2>これまでの記録</h2>
@@ -396,7 +446,7 @@
     <button class="expbtn" id="impJson">バックアップを復元</button>
   </div>
   <input type="file" id="impFile" accept=".json,application/json" style="display:none">
-  <div class="note">CSVの列: datetime(ISO形式) / pain_level(0-4) / pain_label / nausea(0-2) / nausea_label / medications / med_class / memo。表計算ソフトやAI分析にそのまま使える形式です。バックアップ(JSON)は月1回「ファイル」アプリに保存しておくと安心。復元で全記録が戻ります。</div>
+  <div class="note">CSVの列: datetime(ISO形式) / pain_level(0-3) / pain_label / nausea(0-2) / nausea_label / medications / med_class / memo。表計算ソフトやAI分析にそのまま使える形式です。バックアップ(JSON)は月1回「ファイル」アプリに保存しておくと安心。復元で全記録が戻ります。</div>
 </div>
 
 <div class="toast" id="toast">保存しました</div>
@@ -407,20 +457,20 @@
   var KEYM='migraine-meta-v1';
   var NSAIDS=['イブプロフェン','ロキソプロフェン'];
   var TRIPTANS=['スマトリプタン','ゾルミトリプタン','エレトリプタン','リザトリプタン'];
-  var PAIN_LABEL=['なし','軽い','中くらい','激しい','最悪'];
-  var PAIN_COLOR=['#b9c4cc','#5fa8dc','#f0b83e','#e4726b','#9b6fc9'];
-  var PAIN_TINT=['','#eaf3fb','#fdf5e2','#fceceb','#f3ecfa'];
+  var PAIN_LABEL=['なし','軽い','中くらい','最悪'];
+  var PAIN_COLOR=['#b9c4cc','#5fa8dc','#f0b83e','#e4726b'];
   var NAUSEA_LABEL=['なし','吐き気あり','吐いた'];
   var WDAY=['日','月','火','水','木','金','土'];
-  var PX=16;               // 1時間あたりのピクセル
+  var PX=16;
   var HOUR=3600000;
   var DAYMS=86400000;
 
-  var records=[];          // {id, ts, pain:0-4, nausea:0-2, meds:[], memo}
-  var meta={};             // {lastBackup, snoozeUntil}
+  var records=[];
+  var meta={};
   var showCount=10;
-  var mode='none';         // 'claude' | 'local' | 'none'
-  var rvOffset=0;          // ふりかえりの月オフセット(0=今月, -1=先月...)
+  var mode='none';
+  var rvOffset=0;
+  var editingId=null;
 
   /* ---------- storage ---------- */
   function canLocal(){
@@ -490,7 +540,8 @@
     var d=Math.floor(h/24);
     return d+'日'+(h%24?(h%24)+'時間':'');
   }
-  function pv(r){ return typeof r.pain==='number'?r.pain:0; }
+  /* 旧5段階(0-4)の記録は0-3に読み替え(3=激しい,4=最悪 → 3=最悪) */
+  function pv(r){ var p=typeof r.pain==='number'?r.pain:0; return p>3?3:p; }
   function nv(r){ return typeof r.nausea==='number'?r.nausea:0; }
 
   /* ---------- 時間軸ピッカー ---------- */
@@ -569,6 +620,7 @@
     $('pkTime').textContent=(selTime.getMonth()+1)+'/'+selTime.getDate()+'('+WDAY[selTime.getDay()]+') '+pad(selTime.getHours())+':'+pad(selTime.getMinutes());
     var lastN=null,lastT=null;
     records.forEach(function(r){
+      if(editingId&&r.id===editingId) return;
       var t=parseTs(r.ts);
       if(t>selTime) return;
       (r.meds||[]).forEach(function(m){
@@ -612,14 +664,14 @@
     fill($('sinceT'),lastT);
   }
 
-  /* ---------- 日ごとタイムライン(60日) ---------- */
+  /* ---------- 日別集計 ---------- */
   function aggregateByDay(){
     var byDay={};
     records.forEach(function(r){
       var k=dateKey(r.ts);
-      var o=byDay[k]||(byDay[k]={pain:0,n:false,t:false,o:false});
+      var o=byDay[k]||(byDay[k]={attacks:[],n:false,t:false,o:false});
       var p=pv(r);
-      if(p>o.pain) o.pain=p;
+      if(p>=1) o.attacks.push({p:p,ts:r.ts});
       (r.meds||[]).forEach(function(m){
         var c=medClass(m);
         if(c==='NSAID') o.n=true;
@@ -627,28 +679,38 @@
         else o.o=true;
       });
     });
+    Object.keys(byDay).forEach(function(k){
+      byDay[k].attacks.sort(function(a,b){ return a.ts<b.ts?-1:1; });
+    });
     return byDay;
   }
+
+  /* ---------- タイムライン(60日・積み上げ) ---------- */
   function renderTimeline(){
     var tl=$('tl'); tl.innerHTML='';
     var byDay=aggregateByDay();
     var today=new Date(); today.setHours(0,0,0,0);
     var todayKey=localDT(today).slice(0,10);
-    var heights=[4,22,40,58,76];
+    var MAXB=6;
     for(var i=59;i>=0;i--){
       var d=new Date(today.getTime()-i*DAYMS);
       var k=d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
       var o=byDay[k];
       var div=document.createElement('div');
       div.className='day'+(k===todayKey?' today':'');
-      var p=o?o.pain:0;
-      var bar='<div class="bar" style="height:'+heights[p]+'px;'+(p?'background:'+PAIN_COLOR[p]:'')+'"></div>';
+      var balls='';
+      if(o&&o.attacks.length){
+        var show=o.attacks.slice(0,MAXB);
+        show.forEach(function(a){ balls+='<div class="aball" style="background:'+PAIN_COLOR[a.p]+'"></div>'; });
+        if(o.attacks.length>MAXB) balls+='<div class="amore">+'+(o.attacks.length-MAXB)+'</div>';
+      }
+      var stack='<div class="astack">'+balls+'</div><div class="base"></div>';
       var dots='<div class="dots">'+
         (o&&o.n?'<div class="dot n">N</div>':'')+
         (o&&o.t?'<div class="dot t">T</div>':'')+
         (o&&o.o?'<div class="dot o">他</div>':'')+'</div>';
       var lbl='<div class="dlbl">'+(d.getMonth()+1)+'/'+d.getDate()+'</div>';
-      div.innerHTML=bar+dots+lbl;
+      div.innerHTML=stack+dots+lbl;
       tl.appendChild(div);
     }
     var wrap=tl.parentElement;
@@ -683,37 +745,38 @@
   /* ---------- ふりかえり(月間統計) ---------- */
   function renderReview(){
     var now=new Date();
-    var y=now.getFullYear(), m0=now.getMonth()+rvOffset;
-    var base=new Date(y,m0,1);
-    y=base.getFullYear(); var m=base.getMonth();
+    var base=new Date(now.getFullYear(),now.getMonth()+rvOffset,1);
+    var y=base.getFullYear(), m=base.getMonth();
     $('rvTitle').textContent=y+'年'+(m+1)+'月';
     $('rvNext').disabled=(rvOffset>=0);
 
     var prefix=y+'-'+pad(m+1);
     var byDay={};
-    var painCount=[0,0,0,0,0];
+    var painCount=[0,0,0,0];
     var attacks=0, painSum=0;
     var nDays={},tDays={},headDays={};
     records.forEach(function(r){
       if(r.ts.slice(0,7)!==prefix) return;
       var k=dateKey(r.ts);
-      var o=byDay[k]||(byDay[k]={pain:0,n:false,t:false,o:false});
+      var o=byDay[k]||(byDay[k]={attacks:[]});
       var p=pv(r);
-      if(p>o.pain) o.pain=p;
-      if(p>=1){ painCount[p]++; attacks++; painSum+=p; headDays[k]=1; }
+      if(p>=1){ o.attacks.push({p:p,ts:r.ts}); painCount[p]++; attacks++; painSum+=p; headDays[k]=1; }
       (r.meds||[]).forEach(function(md){
         var c=medClass(md);
-        if(c==='NSAID'){ o.n=true; nDays[k]=1; }
-        else if(c==='triptan'){ o.t=true; tDays[k]=1; }
-        else o.o=true;
+        if(c==='NSAID') nDays[k]=1;
+        else if(c==='triptan') tDays[k]=1;
       });
     });
+    Object.keys(byDay).forEach(function(k){
+      byDay[k].attacks.sort(function(a,b){ return a.ts<b.ts?-1:1; });
+    });
 
-    // カレンダー
+    // カレンダー(発作のカラーボール積み上げ)
     var cal=$('cal'); cal.innerHTML='';
     var firstDow=new Date(y,m,1).getDay();
     var daysInMonth=new Date(y,m+1,0).getDate();
     var todayKey=localDT(new Date()).slice(0,10);
+    var MAXC=4;
     var i;
     for(i=0;i<firstDow;i++){
       var b=document.createElement('div'); b.className='cell blank'; cal.appendChild(b);
@@ -722,16 +785,16 @@
       var k=prefix+'-'+pad(i);
       var o=byDay[k];
       var cell=document.createElement('div');
-      cell.className='cell'+(o&&o.pain?' haspain':'')+(k===todayKey?' today':'');
-      if(o&&o.pain) cell.style.background=PAIN_TINT[o.pain];
-      var marks='';
-      if(o){
-        marks='<div class="cmark">'+
-          (o.n?'<div class="cm n"></div>':'')+
-          (o.t?'<div class="cm t"></div>':'')+
-          (o.o?'<div class="cm o"></div>':'')+'</div>';
+      var has=o&&o.attacks.length;
+      cell.className='cell'+(has?' haspain':'')+(k===todayKey?' today':'');
+      var balls='';
+      if(has){
+        var show=o.attacks.slice(0,MAXC);
+        show.forEach(function(a){ balls+='<div class="cb" style="background:'+PAIN_COLOR[a.p]+'"></div>'; });
+        if(o.attacks.length>MAXC) balls+='<div class="cmore">+'+(o.attacks.length-MAXC)+'</div>';
+        balls='<div class="cballs">'+balls+'</div>';
       }
-      cell.innerHTML='<span class="dn">'+i+'</span>'+marks;
+      cell.innerHTML='<span class="dn">'+i+'</span>'+balls;
       cal.appendChild(cell);
     }
 
@@ -744,9 +807,9 @@
       '<div class="s"><div class="n">'+Object.keys(nDays).length+'/'+Object.keys(tDays).length+'</div><div class="l">服薬日 N/T</div></div>';
 
     // 強さ別回数
-    var maxP=Math.max(1,painCount[1],painCount[2],painCount[3],painCount[4]);
+    var maxP=Math.max(1,painCount[1],painCount[2],painCount[3]);
     var ph='';
-    for(i=1;i<=4;i++){
+    for(i=1;i<=3;i++){
       ph+='<div class="brow'+(painCount[i]?'':' dim')+'">'+
         '<div class="bl">'+PAIN_LABEL[i]+'</div>'+
         '<div class="btrack"><div class="bfill" style="width:'+Math.round(painCount[i]/maxP*100)+'%;background:'+PAIN_COLOR[i]+'"></div></div>'+
@@ -773,6 +836,81 @@
   $('rvPrev').addEventListener('click',function(){ rvOffset--; renderReview(); });
   $('rvNext').addEventListener('click',function(){ if(rvOffset<0){ rvOffset++; renderReview(); } });
 
+  /* ---------- 年間総括 ---------- */
+  var yrOffset=0;
+  function renderYear(){
+    var y=new Date().getFullYear()+yrOffset;
+    $('yrTitle').textContent=y+'年';
+    $('yrNext').disabled=(yrOffset>=0);
+
+    var months=[];
+    var i;
+    for(i=0;i<12;i++) months.push({c:[0,0,0,0],attacks:0,n:{},t:{}});
+    var headDaysY={},nDaysY={},tDaysY={},attacksY=0,painSumY=0;
+    records.forEach(function(r){
+      if(r.ts.slice(0,4)!==String(y)) return;
+      var m=+r.ts.slice(5,7)-1;
+      var k=dateKey(r.ts);
+      var p=pv(r);
+      if(p>=1){ months[m].c[p]++; months[m].attacks++; attacksY++; painSumY+=p; headDaysY[k]=1; }
+      (r.meds||[]).forEach(function(md){
+        var c=medClass(md);
+        if(c==='NSAID'){ months[m].n[k]=1; nDaysY[k]=1; }
+        else if(c==='triptan'){ months[m].t[k]=1; tDaysY[k]=1; }
+      });
+    });
+
+    var avg=attacksY?(painSumY/attacksY).toFixed(1):'-';
+    $('yrSum').innerHTML=
+      '<div class="s"><div class="n">'+Object.keys(headDaysY).length+'</div><div class="l">頭痛日数</div></div>'+
+      '<div class="s"><div class="n">'+attacksY+'</div><div class="l">発作回数</div></div>'+
+      '<div class="s"><div class="n">'+avg+'</div><div class="l">平均強度</div></div>'+
+      '<div class="s"><div class="n">'+Object.keys(nDaysY).length+'/'+Object.keys(tDaysY).length+'</div><div class="l">服薬日 N/T</div></div>';
+
+    // 月別発作回数(強さ別の積み上げ棒)
+    var maxA=1;
+    months.forEach(function(o){ if(o.attacks>maxA) maxA=o.attacks; });
+    var unitA=80/maxA;
+    var ah='';
+    for(i=0;i<12;i++){
+      var o=months[i];
+      var segs='';
+      for(var p=1;p<=3;p++){
+        if(o.c[p]) segs+='<div class="yseg" style="height:'+Math.max(3,Math.round(o.c[p]*unitA))+'px;background:'+PAIN_COLOR[p]+'"></div>';
+      }
+      ah+='<div class="ycol">'+
+        '<div class="ycnt">'+(o.attacks||'')+'</div>'+
+        '<div class="ystack">'+segs+'</div>'+
+        '<div class="ylbl">'+(i+1)+'</div></div>';
+    }
+    $('yrAttacks').innerHTML=ah;
+
+    // 月別服薬日数(N/Tの2本棒・目安超えは赤)
+    var maxM=1;
+    months.forEach(function(o){
+      var nn=Object.keys(o.n).length, tn=Object.keys(o.t).length;
+      if(nn>maxM) maxM=nn;
+      if(tn>maxM) maxM=tn;
+    });
+    var unitM=46/maxM;
+    var mh='';
+    for(i=0;i<12;i++){
+      var nn=Object.keys(months[i].n).length, tn=Object.keys(months[i].t).length;
+      var nCol=nn>=15?'var(--danger)':'var(--nsaid)';
+      var tCol=tn>=10?'var(--danger)':'var(--triptan)';
+      mh+='<div class="ycol">'+
+        '<div class="ycnt">'+((nn||tn)?(nn+'/'+tn):'')+'</div>'+
+        '<div class="ymed">'+
+          '<div class="ymb" style="height:'+(nn?Math.max(3,Math.round(nn*unitM)):2)+'px;background:'+(nn?nCol:'var(--surface2)')+'"></div>'+
+          '<div class="ymb" style="height:'+(tn?Math.max(3,Math.round(tn*unitM)):2)+'px;background:'+(tn?tCol:'var(--surface2)')+'"></div>'+
+        '</div>'+
+        '<div class="ylbl">'+(i+1)+'</div></div>';
+    }
+    $('yrMeds').innerHTML=mh;
+  }
+  $('yrPrev').addEventListener('click',function(){ yrOffset--; renderYear(); });
+  $('yrNext').addEventListener('click',function(){ if(yrOffset<0){ yrOffset++; renderYear(); } });
+
   /* ---------- 履歴 ---------- */
   function renderRecs(){
     var wrap=$('recs'); wrap.innerHTML='';
@@ -785,20 +923,33 @@
     sorted.slice(0,showCount).forEach(function(r){
       var d=parseTs(r.ts);
       var row=document.createElement('div'); row.className='rec';
-      var what=[];
-      if(pv(r)>=1) what.push('痛み: '+PAIN_LABEL[pv(r)]);
-      if(nv(r)>=1) what.push(NAUSEA_LABEL[nv(r)]);
-      if((r.meds||[]).length) what.push(r.meds.join('、'));
-      if(!what.length) what.push('記録のみ');
+      var p=pv(r), n=nv(r);
       row.innerHTML=
-        '<div class="pchip" style="background:'+PAIN_COLOR[pv(r)]+'"></div>'+
-        '<div class="body"><div class="when">'+(d.getMonth()+1)+'/'+d.getDate()+'('+WDAY[d.getDay()]+') '+pad(d.getHours())+':'+pad(d.getMinutes())+'</div>'+
-        '<div class="what"></div>'+(r.memo?'<div class="memo"></div>':'')+'</div>'+
-        '<button class="del" aria-label="削除">✕</button>';
-      row.querySelector('.what').textContent=what.join(' / ');
+        '<div class="top">'+
+          '<div class="when">'+(d.getMonth()+1)+'/'+d.getDate()+'('+WDAY[d.getDay()]+') '+pad(d.getHours())+':'+pad(d.getMinutes())+'</div>'+
+          '<button class="edit" aria-label="編集">✎ 編集</button>'+
+          '<button class="del" aria-label="削除">✕</button>'+
+        '</div>'+
+        '<div class="badges"></div>'+
+        (r.memo?'<div class="memo"></div>':'');
+      var bwrap=row.querySelector('.badges');
+      function addBadge(cls,txt){
+        var s=document.createElement('span');
+        s.className='badge '+cls; s.textContent=txt;
+        bwrap.appendChild(s);
+      }
+      if(p>=1) addBadge('b-p'+p,'痛み '+PAIN_LABEL[p]);
+      if(n>=1) addBadge('b-n'+n,NAUSEA_LABEL[n]);
+      (r.meds||[]).forEach(function(m){
+        var c=medClass(m);
+        addBadge(c==='NSAID'?'b-medn':(c==='triptan'?'b-medt':'b-medo'),m);
+      });
+      if(p===0&&n===0&&!(r.meds||[]).length) addBadge('b-none','記録のみ');
       if(r.memo) row.querySelector('.memo').textContent=r.memo;
+      row.querySelector('.edit').addEventListener('click',function(){ startEdit(r.id); });
       row.querySelector('.del').addEventListener('click',function(){
         if(!confirm('この記録を削除しますか?')) return;
+        if(editingId===r.id) cancelEdit();
         records=records.filter(function(x){ return x.id!==r.id; });
         persist().then(renderAll);
       });
@@ -835,21 +986,27 @@
   });
 
   function renderAll(){
-    renderSince(); renderTimeline(); renderRecent30(); renderReview(); renderRecs();
+    renderSince(); renderTimeline(); renderRecent30(); renderReview(); renderYear(); renderRecs();
     renderPickerMarks(); updateSelected(); renderBanner();
   }
 
   /* ---------- form ---------- */
   var selPain=0, selNausea=0;
+  function setPain(p){
+    selPain=p;
+    document.querySelectorAll('.face').forEach(function(x){ x.classList.toggle('sel',+x.dataset.p===p); });
+  }
+  function setNausea(n){
+    selNausea=n;
+    document.querySelectorAll('.nausea').forEach(function(x){ x.classList.toggle('sel',+x.dataset.n===n); });
+  }
   $('faces').addEventListener('click',function(e){
     var f=e.target.closest('.face'); if(!f) return;
-    selPain=+f.dataset.p;
-    document.querySelectorAll('.face').forEach(function(x){ x.classList.toggle('sel',x===f); });
+    setPain(+f.dataset.p);
   });
   $('nauseas').addEventListener('click',function(e){
     var b=e.target.closest('.nausea'); if(!b) return;
-    selNausea=+b.dataset.n;
-    document.querySelectorAll('.nausea').forEach(function(x){ x.classList.toggle('sel',x===b); });
+    setNausea(+b.dataset.n);
   });
   $('meds').addEventListener('click',function(e){
     var b=e.target.closest('.med'); if(!b) return;
@@ -860,25 +1017,76 @@
       if(on) $('otherMed').focus();
     }
   });
+
+  function resetForm(){
+    editingId=null;
+    $('editBar').style.display='none';
+    $('save').textContent='この時刻で保存する';
+    setPain(0); setNausea(0);
+    document.querySelectorAll('.med.sel').forEach(function(x){ x.classList.remove('sel'); });
+    $('otherMed').value=''; $('otherMed').style.display='none';
+    $('memo').value='';
+  }
+  function cancelEdit(){
+    resetForm();
+    updateSelected();
+  }
+  $('editCancel').addEventListener('click',cancelEdit);
+
+  function startEdit(id){
+    var r=null;
+    records.forEach(function(x){ if(x.id===id) r=x; });
+    if(!r) return;
+    editingId=id;
+    $('editBar').style.display='flex';
+    $('save').textContent='変更を保存する';
+    setPain(pv(r)); setNausea(nv(r));
+    var others=[];
+    document.querySelectorAll('.med[data-med]').forEach(function(b){ b.classList.remove('sel'); });
+    (r.meds||[]).forEach(function(m){
+      var btn=document.querySelector('.med[data-med="'+m.replace(/"/g,'')+'"]');
+      if(btn) btn.classList.add('sel');
+      else others.push(m);
+    });
+    var ob=$('otherBtn');
+    if(others.length){
+      ob.classList.add('sel');
+      $('otherMed').style.display='block';
+      $('otherMed').value=others.join('、');
+    }else{
+      ob.classList.remove('sel');
+      $('otherMed').style.display='none';
+      $('otherMed').value='';
+    }
+    $('memo').value=r.memo||'';
+    scrollToTime(parseTs(r.ts));
+    updateSelected();
+    $('formCard').scrollIntoView({behavior:'smooth',block:'start'});
+  }
+
   $('save').addEventListener('click',function(){
     if(!selTime){ toast('日時を選んでください'); return; }
     var meds=[].map.call(document.querySelectorAll('.med.sel[data-med]'),function(b){ return b.dataset.med; });
     if($('otherBtn').classList.contains('sel')){
-      var om=$('otherMed').value.trim();
-      if(om) meds.push(om);
+      $('otherMed').value.split(/[、,]/).forEach(function(s){
+        s=s.trim(); if(s) meds.push(s);
+      });
     }
     var memo=$('memo').value.trim();
     if(selPain===0&&selNausea===0&&meds.length===0&&!memo){ toast('痛み・吐き気・くすり・メモのどれかを入力'); return; }
-    records.push({ id:Date.now()+'-'+Math.random().toString(36).slice(2,7), ts:localDT(selTime), pain:selPain, nausea:selNausea, meds:meds, memo:memo });
+    if(editingId){
+      records.forEach(function(r){
+        if(r.id!==editingId) return;
+        r.ts=localDT(selTime); r.pain=selPain; r.nausea=selNausea; r.meds=meds; r.memo=memo;
+      });
+    }else{
+      records.push({ id:Date.now()+'-'+Math.random().toString(36).slice(2,7), ts:localDT(selTime), pain:selPain, nausea:selNausea, meds:meds, memo:memo });
+    }
+    var wasEdit=!!editingId;
     persist().then(function(){
-      selPain=0; selNausea=0;
-      document.querySelectorAll('.face').forEach(function(x){ x.classList.toggle('sel',x.dataset.p==='0'); });
-      document.querySelectorAll('.nausea').forEach(function(x){ x.classList.toggle('sel',x.dataset.n==='0'); });
-      document.querySelectorAll('.med.sel').forEach(function(x){ x.classList.remove('sel'); });
-      $('otherMed').value=''; $('otherMed').style.display='none';
-      $('memo').value='';
+      resetForm();
       renderAll();
-      toast(mode==='none'?'保存(この画面を閉じると消えます)':'保存しました');
+      toast(mode==='none'?'保存(この画面を閉じると消えます)':(wasEdit?'変更を保存しました':'保存しました'));
     });
   });
 
@@ -922,7 +1130,7 @@
   /* ---------- バックアップ(JSON) ---------- */
   function doBackup(){
     if(!records.length){ toast('記録がありません'); return; }
-    var blob=new Blob([JSON.stringify({app:'zutsu-log',version:2,exported:localDT(new Date()),records:records},null,1)],{type:'application/json'});
+    var blob=new Blob([JSON.stringify({app:'zutsu-log',version:3,exported:localDT(new Date()),records:records},null,1)],{type:'application/json'});
     var a=document.createElement('a');
     a.href=URL.createObjectURL(blob);
     a.download='zutsu-log-backup-'+localDT(new Date()).slice(0,10)+'.json';
@@ -962,7 +1170,7 @@
   /* ---------- init ---------- */
   loadAll().then(function(){
     buildPicker();
-    renderSince(); renderTimeline(); renderRecent30(); renderReview(); renderRecs(); renderBanner();
+    renderSince(); renderTimeline(); renderRecent30(); renderReview(); renderYear(); renderRecs(); renderBanner();
     requestAnimationFrame(function(){
       scrollToTime(new Date());
       updateSelected();
