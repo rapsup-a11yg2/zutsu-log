@@ -282,6 +282,10 @@
     margin-top:10px;padding:10px 12px;border-radius:10px;
     background:var(--accent-soft);color:#39756f;font-size:12px;line-height:1.6;
   }
+  .time-insight{
+    margin-top:10px;padding:10px 12px;border-radius:10px;
+    background:var(--accent-soft);color:#39756f;font-size:13px;font-weight:700;line-height:1.6;
+  }
 
   .toast{
     position:fixed;left:50%;bottom:calc(28px + env(safe-area-inset-bottom));transform:translateX(-50%) translateY(20px);
@@ -437,6 +441,10 @@
   <div id="yrPain"></div>
   <div class="rv-sub">曜日別の頭痛日数（年間）</div>
   <div id="yrDow"></div>
+  <div class="rv-sub">発作が始まりやすい時間帯（3時間ごと）</div>
+  <div id="yrTime"></div>
+  <div class="time-insight" id="yrTimeInsight"></div>
+  <div class="note">痛みが「軽い」以上の記録日時を、発作開始時刻として集計しています。</div>
 </div>
 
 <h2>これまでの記録</h2>
@@ -869,13 +877,17 @@
     var months=[];
     var i;
     for(i=0;i<12;i++) months.push({c:[0,0,0,0],attacks:0,n:{},t:{}});
-    var headDaysY={},nDaysY={},tDaysY={},painCountY=[0,0,0,0],attacksY=0,painSumY=0;
+    var headDaysY={},nDaysY={},tDaysY={},painCountY=[0,0,0,0],timeCountY=[0,0,0,0,0,0,0,0],attacksY=0,painSumY=0;
     records.forEach(function(r){
       if(r.ts.slice(0,4)!==String(y)) return;
       var m=+r.ts.slice(5,7)-1;
       var k=dateKey(r.ts);
       var p=pv(r);
-      if(p>=1){ months[m].c[p]++; months[m].attacks++; painCountY[p]++; attacksY++; painSumY+=p; headDaysY[k]=1; }
+      if(p>=1){
+        months[m].c[p]++; months[m].attacks++; painCountY[p]++;
+        timeCountY[Math.floor(parseTs(r.ts).getHours()/3)]++;
+        attacksY++; painSumY+=p; headDaysY[k]=1;
+      }
       (r.meds||[]).forEach(function(md){
         var c=medClass(md);
         if(c==='NSAID'){ months[m].n[k]=1; nDaysY[k]=1; }
@@ -957,6 +969,29 @@
         '<div class="bn">'+dow[i]+'</div></div>';
     }
     $('yrDow').innerHTML=dh;
+
+    // 年間の発作開始時間帯（3時間ごと）
+    var timeLabels=['0〜3時','3〜6時','6〜9時','9〜12時','12〜15時','15〜18時','18〜21時','21〜24時'];
+    var maxTime=Math.max.apply(null,timeCountY.concat([1]));
+    var th='';
+    for(i=0;i<8;i++){
+      var timeCol=timeCountY[i]===maxTime&&timeCountY[i]>0?'var(--accent)':'#9acfc9';
+      th+='<div class="brow'+(timeCountY[i]?'':' dim')+'">'+
+        '<div class="bl">'+timeLabels[i]+'</div>'+
+        '<div class="btrack"><div class="bfill" style="width:'+Math.round(timeCountY[i]/maxTime*100)+'%;background:'+timeCol+'"></div></div>'+
+        '<div class="bn">'+timeCountY[i]+'</div></div>';
+    }
+    $('yrTime').innerHTML=th;
+
+    var insight=$('yrTimeInsight');
+    if(!attacksY){
+      insight.textContent='この年は、時間帯を集計できる発作記録がありません。';
+    }else{
+      var peaks=[];
+      timeCountY.forEach(function(n,idx){ if(n===maxTime) peaks.push(timeLabels[idx]); });
+      insight.textContent='最も多い時間帯：'+peaks.join('・')+'（'+
+        (peaks.length>1?'各':'')+maxTime+'回'+(peaks.length===1?'、全体の'+Math.round(maxTime/attacksY*100)+'％':'')+'）';
+    }
   }
   $('yrPrev').addEventListener('click',function(){ yrOffset--; renderYear(); });
   $('yrNext').addEventListener('click',function(){ if(yrOffset<0){ yrOffset++; renderYear(); } });
