@@ -3,6 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' data:; connect-src 'none'; font-src 'self'; media-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-src 'none'">
 <title>ずつログ</title>
 <style>
   :root{
@@ -276,6 +278,10 @@
     border-radius:12px;padding:13px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;
   }
   .note{font-size:11px;color:var(--sub);margin-top:8px}
+  .privacy-note{
+    margin-top:10px;padding:10px 12px;border-radius:10px;
+    background:var(--accent-soft);color:#39756f;font-size:12px;line-height:1.6;
+  }
 
   .toast{
     position:fixed;left:50%;bottom:calc(28px + env(safe-area-inset-bottom));transform:translateX(-50%) translateY(20px);
@@ -427,6 +433,10 @@
   <div class="rv-sub">月別の服薬日数(青=NSAIDs・橙=トリプタン)</div>
   <div class="yr-chart short" id="yrMeds"></div>
   <div class="note">服薬日数が目安(NSAIDs 月15日・トリプタン 月10日)以上になった月は赤い棒で表示されます。</div>
+  <div class="rv-sub">痛みの強さ別の回数（年間）</div>
+  <div id="yrPain"></div>
+  <div class="rv-sub">曜日別の頭痛日数（年間）</div>
+  <div id="yrDow"></div>
 </div>
 
 <h2>これまでの記録</h2>
@@ -446,6 +456,7 @@
     <button class="expbtn" id="impJson">バックアップを復元</button>
   </div>
   <input type="file" id="impFile" accept=".json,application/json" style="display:none">
+  <div class="privacy-note">🔒 記録はこのブラウザ内に保存され、GitHubへは送信されません。CSV・バックアップには健康情報が含まれるため、共有や保存先に注意してください。</div>
   <div class="note">CSVの列: datetime(ISO形式) / pain_level(0-3) / pain_label / nausea(0-2) / nausea_label / medications / med_class / memo。表計算ソフトやAI分析にそのまま使える形式です。バックアップ(JSON)は月1回「ファイル」アプリに保存しておくと安心。復元で全記録が戻ります。</div>
 </div>
 
@@ -654,11 +665,23 @@
       });
     });
     function fill(el,last){
-      if(!last){ el.innerHTML='<div class="none">記録なし</div>'; return; }
+      el.textContent='';
+      if(!last){
+        var none=document.createElement('div');
+        none.className='none'; none.textContent='記録なし'; el.appendChild(none);
+        return;
+      }
       var d=parseTs(last.ts);
       var e=fmtElapsed(Date.now()-d.getTime());
-      el.innerHTML='<div class="big">'+e.replace(/(\d+)([^\d]+)/g,'$1<small>$2</small>')+'<small>前</small></div>'+
-        '<div class="detail">'+last.med+'・'+(d.getMonth()+1)+'/'+d.getDate()+' '+pad(d.getHours())+':'+pad(d.getMinutes())+'</div>';
+      var big=document.createElement('div'); big.className='big';
+      e.split(/(\d+)/).filter(Boolean).forEach(function(part){
+        if(/^\d+$/.test(part)) big.appendChild(document.createTextNode(part));
+        else{ var unit=document.createElement('small'); unit.textContent=part; big.appendChild(unit); }
+      });
+      var ago=document.createElement('small'); ago.textContent='前'; big.appendChild(ago);
+      var detail=document.createElement('div'); detail.className='detail';
+      detail.textContent=String(last.med)+'・'+(d.getMonth()+1)+'/'+d.getDate()+' '+pad(d.getHours())+':'+pad(d.getMinutes());
+      el.appendChild(big); el.appendChild(detail);
     }
     fill($('sinceN'),lastN);
     fill($('sinceT'),lastT);
@@ -846,13 +869,13 @@
     var months=[];
     var i;
     for(i=0;i<12;i++) months.push({c:[0,0,0,0],attacks:0,n:{},t:{}});
-    var headDaysY={},nDaysY={},tDaysY={},attacksY=0,painSumY=0;
+    var headDaysY={},nDaysY={},tDaysY={},painCountY=[0,0,0,0],attacksY=0,painSumY=0;
     records.forEach(function(r){
       if(r.ts.slice(0,4)!==String(y)) return;
       var m=+r.ts.slice(5,7)-1;
       var k=dateKey(r.ts);
       var p=pv(r);
-      if(p>=1){ months[m].c[p]++; months[m].attacks++; attacksY++; painSumY+=p; headDaysY[k]=1; }
+      if(p>=1){ months[m].c[p]++; months[m].attacks++; painCountY[p]++; attacksY++; painSumY+=p; headDaysY[k]=1; }
       (r.meds||[]).forEach(function(md){
         var c=medClass(md);
         if(c==='NSAID'){ months[m].n[k]=1; nDaysY[k]=1; }
@@ -907,6 +930,33 @@
         '<div class="ylbl">'+(i+1)+'</div></div>';
     }
     $('yrMeds').innerHTML=mh;
+
+    // 年間の強さ別回数（月間統計と同じ形式）
+    var maxP=Math.max(1,painCountY[1],painCountY[2],painCountY[3]);
+    var ph='';
+    for(i=1;i<=3;i++){
+      ph+='<div class="brow'+(painCountY[i]?'':' dim')+'">'+
+        '<div class="bl">'+PAIN_LABEL[i]+'</div>'+
+        '<div class="btrack"><div class="bfill" style="width:'+Math.round(painCountY[i]/maxP*100)+'%;background:'+PAIN_COLOR[i]+'"></div></div>'+
+        '<div class="bn">'+painCountY[i]+'</div></div>';
+    }
+    $('yrPain').innerHTML=ph;
+
+    // 年間の曜日別頭痛日数（月間統計と同じ形式）
+    var dow=[0,0,0,0,0,0,0];
+    Object.keys(headDaysY).forEach(function(k){
+      dow[parseTs(k+'T00:00').getDay()]++;
+    });
+    var maxD=Math.max.apply(null,dow.concat([1]));
+    var dh='';
+    for(i=0;i<7;i++){
+      var col=i===0?'var(--sun)':(i===6?'var(--sat)':'var(--accent)');
+      dh+='<div class="brow'+(dow[i]?'':' dim')+'">'+
+        '<div class="bl">'+WDAY[i]+'曜</div>'+
+        '<div class="btrack"><div class="bfill" style="width:'+Math.round(dow[i]/maxD*100)+'%;background:'+col+'"></div></div>'+
+        '<div class="bn">'+dow[i]+'</div></div>';
+    }
+    $('yrDow').innerHTML=dh;
   }
   $('yrPrev').addEventListener('click',function(){ yrOffset--; renderYear(); });
   $('yrNext').addEventListener('click',function(){ if(yrOffset<0){ yrOffset++; renderYear(); } });
@@ -1044,7 +1094,10 @@
     var others=[];
     document.querySelectorAll('.med[data-med]').forEach(function(b){ b.classList.remove('sel'); });
     (r.meds||[]).forEach(function(m){
-      var btn=document.querySelector('.med[data-med="'+m.replace(/"/g,'')+'"]');
+      var btn=null;
+      document.querySelectorAll('.med[data-med]').forEach(function(b){
+        if(b.dataset.med===String(m)) btn=b;
+      });
       if(btn) btn.classList.add('sel');
       else others.push(m);
     });
@@ -1142,9 +1195,24 @@
   }
   $('expJson').addEventListener('click',doBackup);
   $('impJson').addEventListener('click',function(){ $('impFile').click(); });
+
+  function normalizeImportedRecord(r){
+    if(!r||typeof r!=='object'||Array.isArray(r)) return null;
+    if(typeof r.ts!=='string'||!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/.test(r.ts)) return null;
+    var d=parseTs(r.ts);
+    if(!isFinite(d.getTime())||localDT(d)!==r.ts) return null;
+    if(typeof r.pain!=='number'||!isFinite(r.pain)||r.pain<0||r.pain>4||Math.floor(r.pain)!==r.pain) return null;
+    var nausea=(typeof r.nausea==='number'&&isFinite(r.nausea)&&r.nausea>=0&&r.nausea<=2&&Math.floor(r.nausea)===r.nausea)?r.nausea:0;
+    var meds=Array.isArray(r.meds)?r.meds.filter(function(m){ return typeof m==='string'; }).slice(0,20).map(function(m){ return m.trim().slice(0,60); }).filter(Boolean):[];
+    var memo=typeof r.memo==='string'?r.memo.slice(0,200):'';
+    var id=typeof r.id==='string'&&r.id?r.id.slice(0,120):(r.ts+'-'+r.pain+'-'+meds.join(';'));
+    return {id:id,ts:r.ts,pain:r.pain,nausea:nausea,meds:meds,memo:memo};
+  }
+
   $('impFile').addEventListener('change',function(){
     var f=this.files[0]; this.value='';
     if(!f) return;
+    if(f.size>5*1024*1024){ toast('ファイルが大きすぎます(5MBまで)'); return; }
     var reader=new FileReader();
     reader.onload=function(){
       var incoming;
@@ -1152,11 +1220,12 @@
         var data=JSON.parse(reader.result);
         incoming=Array.isArray(data)?data:data.records;
         if(!Array.isArray(incoming)) throw new Error();
-        incoming=incoming.filter(function(r){ return r&&r.ts&&typeof r.pain==='number'; });
+        if(incoming.length>50000) throw new Error();
+        incoming=incoming.map(normalizeImportedRecord).filter(Boolean);
       }catch(e){ toast('読み込めないファイルです'); return; }
       if(!incoming.length){ toast('記録が見つかりません'); return; }
       if(!confirm(incoming.length+'件を読み込みます。現在の記録と統合しますか?(重複は自動でまとめます)')) return;
-      var byId={};
+      var byId=Object.create(null);
       records.concat(incoming).forEach(function(r){
         var id=r.id||(r.ts+'-'+r.pain+'-'+(r.meds||[]).join(';'));
         byId[id]={ id:id, ts:r.ts, pain:pv(r), nausea:nv(r), meds:r.meds||[], memo:r.memo||'' };
